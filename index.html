@@ -1,0 +1,4083 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Variável Automix</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --ink: #111111;
+      --muted: #69707d;
+      --line: #e2e5ea;
+      --dark: #080808;
+      --dark-2: #171717;
+      --red: #e30b17;
+      --red-dark: #a50610;
+      --green: #12805c;
+      --amber: #9a6512;
+      --shadow: 0 18px 50px rgba(17, 17, 17, 0.08);
+      --radius: 8px;
+      font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      color: #f7f7f7;
+      background:
+        radial-gradient(circle at 76% 8%, rgba(227, 11, 23, 0.22), transparent 34%),
+        radial-gradient(circle at 70% 76%, rgba(227, 11, 23, 0.24), transparent 38%),
+        linear-gradient(135deg, #030303 0%, #0a0a0a 52%, #1a0405 100%);
+      font-size: 15px;
+      font-family: "Inter", "Montserrat", "Segoe UI", Arial, sans-serif;
+    }
+
+    .shell {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: rgba(0, 0, 0, 0.92);
+      color: #fff;
+      border-bottom: 1px solid rgba(227, 11, 23, 0.48);
+    }
+
+    .topbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .v4-logo {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      display: block;
+      flex: 0 0 auto;
+    }
+
+    .automix-header-logo {
+      width: min(110px, 20vw);
+      height: auto;
+      display: block;
+      flex: 0 0 auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .brand p,
+    .period p,
+    .hero p,
+    .metric p,
+    .panel-subtitle,
+    .table-note {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .brand p,
+    .period p {
+      color: #b9bec8;
+      margin-top: 4px;
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      height: 40px;
+      padding: 0 14px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--red-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, .08);
+      border-color: rgba(255, 255, 255, .5);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid rgba(227, 11, 23, .28);
+      outline-offset: 2px;
+    }
+
+    button:disabled {
+      color: #747b85;
+      background: #e3e6ea;
+      border-color: #d4d8de;
+      cursor: not-allowed;
+      opacity: 1;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+    }
+
+    .login-view {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      width: min(420px, 100%);
+      display: grid;
+      gap: 22px;
+      padding: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.88);
+      box-shadow: var(--shadow);
+      color: #fff;
+    }
+
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .login-brand h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .login-brand p,
+    .login-error {
+      margin: 4px 0 0;
+      color: #b9bec8;
+      font-size: 13px;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .login-form .filter-field select,
+    .login-form .filter-field input {
+      width: 100%;
+      height: 42px;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .login-error {
+      color: #ffd3d6;
+      font-weight: 800;
+    }
+
+    .global-filters {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding: 16px 18px;
+      background: rgba(0, 0, 0, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .filter-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .filter-title {
+      display: grid;
+      gap: 2px;
+    }
+
+    .filter-title strong {
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .filter-title span {
+      color: #b9bec8;
+      font-size: 12px;
+    }
+
+    .filter-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .filter-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .filter-field label {
+      color: #b9bec8;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .filter-field select {
+      height: 38px;
+      min-width: 128px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 800;
+      padding: 0 10px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr minmax(190px, 0.85fr);
+      gap: 8px;
+      align-items: stretch;
+      margin-bottom: 14px;
+    }
+
+    .summary {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: var(--radius);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+      padding: 10px 14px;
+      display: grid;
+      gap: 6px;
+      align-content: center;
+      min-height: 70px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      color: var(--red-dark);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .summary-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .summary-title .eyebrow {
+      flex: 0 0 auto;
+      justify-content: flex-end;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--red);
+    }
+
+    .summary h2 {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: 0;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .amount {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+    }
+
+    .amount strong {
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: 0;
+      color: #000;
+      font-weight: 900;
+    }
+
+    .client-confirmation-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--ink);
+      padding: 10px 14px;
+      display: grid;
+      gap: 6px;
+      align-content: center;
+      min-height: 70px;
+    }
+
+    .client-confirmation-card .label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .client-confirmation-card .label > span:first-child {
+      display: none;
+    }
+
+    .client-confirmation-card strong {
+      color: var(--ink);
+      font-size: 21px;
+      line-height: 1;
+      font-weight: 900;
+      justify-self: center;
+      text-align: center;
+    }
+
+    .client-confirmation-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .client-confirmation-actions .btn-secondary {
+      min-height: 28px;
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: #fff1f1;
+      color: var(--red-dark);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .payment-card {
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 0 0 auto;
+      padding-left: 16px;
+      border-left: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .payment-card h3 {
+      margin: 0;
+      color: #b9bec8;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .payment-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .payment-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .payment-row span {
+      color: #b9bec8;
+    }
+
+    .payment-row strong {
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .metric,
+    .panel {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+      color: var(--ink);
+    }
+
+    .metric {
+      padding: 10px 14px;
+      display: grid;
+      align-content: center;
+      min-height: 70px;
+    }
+
+    .metric p {
+      display: none;
+    }
+
+    .metric .label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: 0;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .contract-list-panel {
+      width: 100%;
+    }
+
+    .content-grid.unified {
+      grid-template-columns: 1fr;
+    }
+
+    .panel {
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .panel-header h3 {
+      margin: 0 0 4px;
+      font-size: 18px;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      table-layout: fixed;
+    }
+
+    th {
+      color: var(--muted);
+      text-align: left;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      padding: 14px 14px;
+      background: #fafbfc;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    td {
+      padding: 16px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    tfoot td {
+      background: #111;
+      color: #fff;
+      border-bottom: 0;
+      font-weight: 900;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .money,
+    .number {
+      text-align: right;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    th.number,
+    td.number,
+    .center {
+      text-align: center;
+    }
+
+    .detail-table th:nth-child(1),
+    .detail-table td:nth-child(1) {
+      width: 18%;
+    }
+
+    .detail-table th:nth-child(2),
+    .detail-table td:nth-child(2) {
+      width: 11%;
+      text-align: center;
+    }
+
+    .detail-table th:nth-child(3),
+    .detail-table td:nth-child(3) {
+      width: 16%;
+    }
+
+    .detail-table th:nth-child(4),
+    .detail-table td:nth-child(4) {
+      width: 9%;
+      text-align: center;
+      padding-right: 18px;
+    }
+
+    .detail-table th:nth-child(5),
+    .detail-table td:nth-child(5) {
+      width: 9%;
+      text-align: center;
+      padding-left: 18px;
+    }
+
+    .detail-table th:nth-child(6),
+    .detail-table td:nth-child(6) {
+      width: 18%;
+      padding-left: 22px;
+      padding-right: 26px;
+    }
+
+    .detail-table th:nth-child(7),
+    .detail-table td:nth-child(7) {
+      width: 19%;
+      padding-left: 26px;
+    }
+
+    .charge-validation {
+      display: grid;
+      justify-items: end;
+      gap: 6px;
+    }
+
+    .charge-validation strong {
+      display: block;
+      line-height: 1.1;
+    }
+
+    .charge-validation .btn-secondary,
+    .charge-validation .btn-primary {
+      min-height: 30px;
+      padding: 6px 10px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .charge-validation .btn-confirmed {
+      color: #056444;
+      background: #e8f7f1;
+      border-color: #b8e2d0;
+      cursor: pointer;
+    }
+
+    .payment-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #f8fafb;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .payment-toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+    }
+
+    .lead {
+      font-weight: 850;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #f3f4f6;
+      color: #3a414b;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.red {
+      background: #fff1f1;
+      color: var(--red-dark);
+    }
+
+    .bars {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 7px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fafbfc;
+    }
+
+    .bar-top {
+      display: grid;
+      grid-template-columns: minmax(130px, 0.45fr) minmax(0, 2.55fr);
+      gap: 14px;
+      font-size: 12px;
+      align-items: center;
+    }
+
+    .bar-top > strong {
+      line-height: 1.25;
+      padding-top: 2px;
+    }
+
+    .bar-values {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(150px, 1fr));
+      gap: 6px 18px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: left;
+    }
+
+    .bar-values span {
+      white-space: nowrap;
+      line-height: 1.35;
+    }
+
+    .bar-values strong {
+      color: var(--ink);
+    }
+
+    .bar-row > .track {
+      height: 5px;
+    }
+
+    .lead-payments {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .lead-payment-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .lead-payment-row strong {
+      color: var(--ink);
+    }
+
+    .contract-details {
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .contract-details summary {
+      padding-top: 10px;
+      color: var(--red-dark);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .contract-detail-status {
+      display: inline-flex;
+      min-width: 78px;
+      justify-content: center;
+      margin-right: 8px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .contract-detail-status.confirmed {
+      color: var(--green);
+      background: #e8f7f1;
+    }
+
+    .contract-detail-status.forecast {
+      color: #5e6671;
+      background: #eef0f3;
+    }
+
+    .track {
+      height: 9px;
+      background: #eef0f3;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      background: var(--red);
+      border-radius: inherit;
+    }
+
+    .flow-section {
+      margin-bottom: 18px;
+    }
+
+    .paid-section {
+      margin-top: 18px;
+    }
+
+    .flow-chart {
+      display: grid;
+      gap: 18px;
+    }
+
+    .monthly-flow {
+      display: grid;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .monthly-flow-header {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr) 150px;
+      gap: 12px;
+      align-items: center;
+      min-height: 32px;
+      padding: 4px 14px;
+      background: #fafbfc;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.05;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .monthly-flow-header span:last-child {
+      text-align: right;
+    }
+
+    .monthly-flow-header span {
+      display: flex;
+      align-items: center;
+      min-height: 24px;
+    }
+
+    .monthly-flow-header span:last-child {
+      justify-content: flex-end;
+    }
+
+    #monthlyFlowRows {
+      display: grid;
+      gap: 0;
+    }
+
+    .month-row {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr) 150px;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .month-row:last-child {
+      border-bottom: 0;
+    }
+
+    .month-row:hover,
+    .month-row.open {
+      background: #fafbfc;
+    }
+
+    .month-label {
+      font-weight: 900;
+      color: var(--ink);
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .month-label span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .month-track {
+      display: flex;
+      height: 18px;
+      background: #eef0f3;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .month-fill {
+      height: 100%;
+      min-width: 3px;
+      background: #b9bec8;
+    }
+
+    .month-fill.paid {
+      background: #111;
+    }
+
+    .month-fill.now {
+      background: var(--red);
+    }
+
+    .month-fill.forecast {
+      background: #c8cdd6;
+    }
+
+    .month-fill:only-child,
+    .month-fill:first-child {
+      border-radius: 999px 0 0 999px;
+    }
+
+    .month-fill:last-child {
+      border-radius: 0 999px 999px 0;
+    }
+
+    .month-fill:only-child {
+      border-radius: 999px;
+    }
+
+    .month-value {
+      text-align: right;
+      font-weight: 900;
+      color: var(--ink);
+      white-space: nowrap;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .month-status {
+      display: none;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .month-details {
+      display: none;
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--line);
+      margin-top: 4px;
+      background: #fff;
+    }
+
+    .month-row.open .month-details {
+      display: grid;
+      gap: 0;
+    }
+
+    .month-detail-row {
+      display: grid;
+      grid-template-columns: minmax(130px, 0.75fr) minmax(0, 1.45fr) 130px;
+      gap: 10px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .month-detail-row:last-child {
+      border-bottom: 0;
+    }
+
+    .month-detail-client {
+      color: var(--ink);
+      font-weight: 400;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .month-detail-copy {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .month-detail-row .contract-detail-status {
+      font-weight: 400;
+    }
+
+    .month-detail-row .money {
+      font-weight: 900;
+      color: var(--ink);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: var(--red);
+    }
+
+    .swatch.paid {
+      background: #111;
+    }
+
+    .swatch.future {
+      background: #b9bec8;
+    }
+
+    .tab-nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 24px 0;
+      display: flex;
+      gap: 6px;
+    }
+
+    .tab-button {
+      position: relative;
+      z-index: 52;
+      height: 38px;
+      padding: 0 16px;
+      color: #b9bec8;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, .18);
+    }
+
+    .tab-button.active {
+      color: #fff;
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .logout-button {
+      margin-left: auto;
+    }
+
+    .tab-panel[hidden] {
+      display: none;
+    }
+
+    .management-toolbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding: 16px 18px;
+      background: rgba(0, 0, 0, .86);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: var(--radius);
+    }
+
+    .management-toolbar h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .management-toolbar p {
+      margin: 5px 0 0;
+      color: #b9bec8;
+      font-size: 12px;
+    }
+
+    .management-actions {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .management-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .management-contract {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+    }
+
+    .management-contract + .management-contract {
+      margin-top: 14px;
+    }
+
+    .management-contract-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 14px;
+      color: var(--ink);
+      background: #fafbfc;
+    }
+
+    .management-contract-title,
+    .management-contract-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .management-contract-title h4 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .management-contract-meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .management-contract-meta strong {
+      color: var(--ink);
+    }
+
+    .management-table {
+      min-width: 760px;
+    }
+
+    .management-contract-summary {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(86px, 1fr));
+      gap: 8px;
+      padding: 0 14px 10px;
+      background: #fafbfc;
+    }
+
+    .management-summary-item {
+      min-width: 0;
+    }
+
+    .management-summary-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .management-summary-item strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .archived-details {
+      padding: 0 14px 10px;
+      background: #fafbfc;
+    }
+
+    .archived-details summary {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .archived-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .archived-item {
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      font-size: 11px;
+      color: var(--ink);
+    }
+
+    .contract-progress {
+      height: 5px;
+      margin: 0 14px 13px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e4e7eb;
+    }
+
+    .contract-progress span {
+      display: block;
+      height: 100%;
+      background: var(--red);
+    }
+
+    .contract-expand {
+      flex: 0 0 auto;
+      min-width: 92px;
+      color: #fff;
+      background: #111;
+    }
+
+    .contract-expanded {
+      border-top: 1px solid var(--line);
+    }
+
+    .contract-expanded-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      background: #f5f6f8;
+    }
+
+    .contract-expanded-toolbar span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .contract-expanded-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .contract-expanded-actions .btn-secondary,
+    .compact-row .btn-secondary,
+    .contract-form .btn-secondary,
+    .drawer-actions .btn-secondary {
+      color: #24272d;
+      background: #fff;
+      border-color: #aeb5bf;
+    }
+
+    .contract-expanded-actions .btn-secondary:hover,
+    .compact-row .btn-secondary:hover,
+    .contract-form .btn-secondary:hover,
+    .drawer-actions .btn-secondary:hover {
+      color: #111;
+      background: #e9edf1;
+      border-color: #747d89;
+    }
+
+    .danger-action {
+      color: var(--red-dark) !important;
+      background: #fff5f6 !important;
+      border-color: #f3b8bd !important;
+    }
+
+    .danger-action:hover {
+      background: #ffe8ea !important;
+      border-color: #df6b73 !important;
+    }
+
+    .compact-row {
+      cursor: pointer;
+    }
+
+    .compact-row:hover {
+      background: #fff7f7;
+    }
+
+    .compact-row td {
+      padding-top: 9px;
+      padding-bottom: 9px;
+      vertical-align: middle;
+    }
+
+    .compact-row .received-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-width: 0;
+      line-height: 1.25;
+    }
+
+    .compact-row .received-cell strong {
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .compact-row .status-cell {
+      white-space: nowrap;
+    }
+
+    .row-flags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .flag {
+      display: inline-flex;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      background: #eef0f3;
+      color: #5e6671;
+    }
+
+    .flag.warning {
+      color: #8a5600;
+      background: #fff0c8;
+    }
+
+    .flag.danger {
+      color: #a50610;
+      background: #ffe5e7;
+    }
+
+    .management-filter-bar {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) repeat(3, minmax(140px, 190px));
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #f5f6f8;
+    }
+
+    .management-filter-bar input,
+    .management-filter-bar select {
+      width: 100%;
+      height: 38px;
+      padding: 0 10px;
+      border: 1px solid #cfd4da;
+      border-radius: 6px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+    }
+
+    .management-filter-bar .filter-field label,
+    .contract-form .filter-field label,
+    .drawer-form .filter-field label {
+      color: #4d5561;
+    }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0, 0, 0, .48);
+    }
+
+    .installment-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 51;
+      width: min(430px, 100%);
+      overflow-y: auto;
+      color: var(--ink);
+      background: #fff;
+      box-shadow: -24px 0 70px rgba(0, 0, 0, .3);
+    }
+
+    .installment-drawer[hidden],
+    .drawer-overlay[hidden] {
+      display: none;
+    }
+
+    .drawer-header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      color: #fff;
+      background: #111;
+    }
+
+    .drawer-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .drawer-body {
+      padding: 18px;
+    }
+
+    .drawer-context {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .drawer-context div {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fafbfc;
+    }
+
+    .drawer-context span {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .drawer-context strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+    }
+
+    .drawer-form {
+      display: grid;
+      gap: 13px;
+    }
+
+    .drawer-form .filter-field input,
+    .drawer-form .filter-field select {
+      width: 100%;
+      height: 40px;
+      padding: 0 10px;
+      border: 1px solid #cfd4da;
+      border-radius: 6px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+    }
+
+    .drawer-actions {
+      display: flex;
+      gap: 8px;
+      padding-top: 8px;
+    }
+
+    .drawer-actions button {
+      flex: 1 1 0;
+    }
+
+    .management-note {
+      display: block;
+      margin-top: 4px;
+      color: var(--amber);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .status-confirmed {
+      color: #056444;
+      background: #e8f7f1;
+    }
+
+    .status-pending {
+      color: var(--amber);
+      background: #fff5dc;
+    }
+
+    .btn-confirm {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-reopen {
+      background: #e4e7eb;
+      color: var(--ink);
+    }
+
+    .invoice-preview {
+      display: grid;
+      gap: 9px;
+    }
+
+    .invoice-row {
+      display: grid;
+      grid-template-columns: 1.4fr .8fr .8fr .8fr .8fr;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fafbfc;
+    }
+
+    .invoice-row span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .invoice-row strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .invoice-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding-top: 14px;
+      border-top: 2px solid #111;
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .invoice-total strong {
+      color: var(--red-dark);
+      font-size: 22px;
+    }
+
+    .empty-state {
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed #cbd0d6;
+      border-radius: 7px;
+      background: #fafbfc;
+    }
+
+    .contract-dialog {
+      width: min(720px, calc(100% - 32px));
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
+    }
+
+    .contract-dialog::backdrop {
+      background: rgba(0, 0, 0, .72);
+    }
+
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 18px;
+      color: #fff;
+      background: #111;
+    }
+
+    .dialog-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .dialog-close {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      color: #fff;
+      background: transparent;
+      border: 0;
+      font-size: 22px;
+    }
+
+    .contract-form {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .contract-form .filter-field input,
+    .contract-form .filter-field select {
+      width: 100%;
+      height: 40px;
+      padding: 0 10px;
+      border: 1px solid #cfd4da;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .contract-form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 4px;
+    }
+
+    @media (max-width: 980px) {
+      .overview-grid,
+      .content-grid,
+      .management-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .management-filter-bar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .management-contract-summary {
+        grid-template-columns: repeat(3, minmax(100px, 1fr));
+      }
+
+      .global-filters {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .filter-controls {
+        justify-content: flex-start;
+      }
+
+      .payment-card {
+        padding-left: 0;
+        padding-top: 14px;
+        border-left: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .bar-top {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-values {
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
+      }
+
+      .month-row {
+        grid-template-columns: 72px minmax(0, 1fr);
+      }
+
+      .monthly-flow-header {
+        grid-template-columns: 72px minmax(0, 1fr);
+      }
+
+      .monthly-flow-header span:last-child {
+        display: none;
+      }
+
+      .month-value {
+        grid-column: 1 / -1;
+        text-align: left;
+      }
+
+      .month-detail-row {
+        grid-template-columns: 1fr;
+      }
+
+      .month-detail-client,
+      .month-detail-copy {
+        white-space: normal;
+      }
+
+      .month-detail-row .money {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .topbar-inner,
+      main {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .topbar-inner,
+      .panel-header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .tab-nav {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .tab-button {
+        flex: 1 1 0;
+        padding: 0 8px;
+      }
+
+      .management-toolbar,
+      .management-contract-header,
+      .filter-card,
+      .payment-card {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .filter-controls,
+      .filter-field,
+      .filter-field select {
+        width: 100%;
+      }
+
+      .management-filter-bar,
+      .management-contract-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .contract-expanded-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .management-actions,
+      .management-actions .filter-field,
+      .management-actions select,
+      .management-actions button {
+        width: 100%;
+      }
+
+      .invoice-row {
+        grid-template-columns: 1fr;
+      }
+
+      .contract-form {
+        grid-template-columns: 1fr;
+      }
+
+      .automix-header-logo {
+        width: min(105px, 46vw);
+        align-self: flex-start;
+      }
+
+      .v4-logo {
+        width: 42px;
+        height: 42px;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      .actions button {
+        flex: 1 1 auto;
+      }
+
+      .table-scroll {
+        overflow-x: auto;
+      }
+
+      .bar-values {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        min-width: 860px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .actions {
+        display: none;
+      }
+
+      .topbar {
+        border-bottom-color: #000;
+      }
+
+      main {
+        padding: 18px 0;
+      }
+
+      .summary,
+      .payment-card,
+      .metric,
+      .panel {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="login-view" id="loginView">
+    <div class="login-card">
+      <div class="login-brand">
+        <img class="v4-logo" src="logo.png" alt="V4">
+        <div>
+          <h1>Dashboard Automix</h1>
+          <p>Acesso ao painel de variáveis</p>
+        </div>
+      </div>
+      <form class="login-form" id="roleLoginForm">
+        <div class="filter-field">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" autocomplete="email">
+        </div>
+        <div class="filter-field">
+          <label for="loginPassword">Senha</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </div>
+        <p class="login-error" id="loginError" hidden>Login inválido ou perfil sem acesso.</p>
+        <button class="btn-primary" type="submit">Entrar</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="shell" id="appShell" hidden>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <img class="v4-logo" src="logo.png" alt="V4">
+          <div>
+            <h1>Dashboard Variável Automix</h1>
+            <p>Controle de pagamento de variável de performance</p>
+          </div>
+        </div>
+        <img class="automix-header-logo" src="LOGO-AUTOMIX-BRASIL3--1536x829-1.png" alt="Automix">
+      </div>
+    </header>
+
+    <nav class="tab-nav" aria-label="Áreas do sistema">
+      <button class="tab-button active" type="button" data-tab="dashboardTab">Dashboard</button>
+      <button class="tab-button" type="button" data-tab="managementTab">Gestão de contratos</button>
+      <button class="tab-button logout-button" id="logoutButton" type="button">Sair</button>
+    </nav>
+
+    <main id="dashboardTab" class="tab-panel">
+      <section class="global-filters" aria-label="Filtros do dashboard">
+        <div class="filter-card">
+          <div class="filter-title">
+            <strong>Filtros do dashboard</strong>
+            <span>Use ano e mês para atualizar todos os valores.</span>
+          </div>
+          <div class="filter-controls">
+            <div class="filter-field">
+              <label for="yearFilter">Ano</label>
+              <select id="yearFilter" aria-label="Filtrar dashboard por ano"></select>
+            </div>
+            <div class="filter-field">
+              <label for="monthFilter">Mês</label>
+              <select id="monthFilter" aria-label="Filtrar dashboard por mês"></select>
+            </div>
+          </div>
+        </div>
+        <aside class="payment-card" aria-label="Regra de cobrança">
+          <h3>Referência</h3>
+          <div class="payment-list">
+            <div class="payment-row">
+              <span>Aluguel</span>
+              <strong>2,5% sobre locação</strong>
+            </div>
+            <div class="payment-row">
+              <span>Venda</span>
+              <strong>1% sobre venda</strong>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="overview-grid" aria-label="Resumo executivo">
+        <article class="metric">
+          <div class="label"><span>Contratos</span><span class="tag" id="contractLeadCount">0 leads</span></div>
+          <strong id="contractTotal">R$ 0,00</strong>
+          <p>Valor total dos contratos mapeados</p>
+        </article>
+        <article class="metric">
+          <div class="label"><span>Total validado</span><span class="tag red">cliente</span></div>
+          <strong id="paidVariableTotal">R$ 0,00</strong>
+          <p>Valor validado pelo cliente no ciclo atual</p>
+        </article>
+        <article class="summary">
+          <div class="summary-title">
+            <h2>Valor a pagar</h2>
+            <span class="eyebrow"><span class="dot"></span><span id="periodLabel">2026</span></span>
+          </div>
+          <div class="amount">
+            <strong id="totalDue">R$ 0,00</strong>
+          </div>
+        </article>
+        <article class="client-confirmation-card">
+          <div class="label">
+            <span>Confirmação do cliente</span>
+            <span class="tag" id="clientConfirmationStatus">Pendente</span>
+          </div>
+          <strong id="clientConfirmationAmount">R$ 0,00</strong>
+          <div class="client-confirmation-actions">
+            <button class="btn-secondary" id="validateAllClientChargesButton" type="button" hidden>Validar todas</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="flow-section" aria-label="Gráfico de fluxo mensal da variável">
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Fluxo mensal da variável</h3>
+              <p class="panel-subtitle">Valores validados, cobranças a validar e parcelas futuras por mês</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="flow-chart">
+              <div class="monthly-flow">
+                <div class="monthly-flow-header">
+                  <span>Cobrança</span>
+                  <span>Fluxo</span>
+                  <span>Valor</span>
+                </div>
+                <div id="monthlyFlowRows"></div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Detalhamento da cobrança</h3>
+              <p class="panel-subtitle" id="detailSubtitle">Valores que compõem o pagamento no ano selecionado</p>
+            </div>
+            <span class="tag red">Total: <span id="headerTotal">R$ 0,00</span></span>
+          </div>
+          <div class="table-scroll">
+            <table class="detail-table">
+              <thead>
+                <tr>
+                  <th>Lead</th>
+                  <th>Mês</th>
+                  <th class="money">Contrato R$</th>
+                  <th class="number">Parcelas</th>
+                  <th class="number">Validado</th>
+                  <th class="money">Parcela contrato</th>
+                  <th class="money">Validação</th>
+                </tr>
+              </thead>
+              <tbody id="chargeRows"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6">Soma total no detalhamento</td>
+                  <td class="money" id="tableTotal">R$ 0,00</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </article>
+
+        <aside class="panel contract-list-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Lista de contratos</h3>
+              <p class="panel-subtitle">Total variável, valor mensal e pagamentos registrados</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="bars" id="bars"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <main id="managementTab" class="tab-panel" hidden>
+      <section class="management-toolbar">
+        <div>
+          <h2>Gestão de contratos e recebimentos</h2>
+          <p>Competência é o mês da venda. Recebimento e cobrança são controlados separadamente.</p>
+        </div>
+        <div class="management-actions">
+          <div class="filter-field">
+            <label for="billingFilter">Mês da cobrança</label>
+            <select id="billingFilter"></select>
+          </div>
+          <button class="btn-primary" id="newContractButton" type="button">Novo contrato</button>
+        </div>
+      </section>
+
+      <section class="management-metrics" aria-label="Resumo da gestão">
+        <article class="metric">
+          <div class="label"><span>Variável confirmada</span><span class="tag status-confirmed">Cobrável</span></div>
+          <strong id="managementVariable">R$ 0,00</strong>
+          <p>No mês de cobrança selecionado</p>
+        </article>
+        <article class="metric">
+          <div class="label"><span>Base confirmada</span><span class="tag">Recebido</span></div>
+          <strong id="managementBase">R$ 0,00</strong>
+          <p>Valor efetivamente recebido</p>
+        </article>
+        <article class="metric">
+          <div class="label"><span>Pendências</span><span class="tag status-pending">Revisar</span></div>
+          <strong id="managementPending">0</strong>
+          <p>Recebimentos não confirmados</p>
+        </article>
+        <article class="metric">
+          <div class="label"><span>Contratos</span><span class="tag">Ativos</span></div>
+          <strong id="managementContracts">0</strong>
+          <p>Competências de venda preservadas</p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h3>Cronograma e confirmações</h3>
+            <p class="panel-subtitle">Pendências e próximas parcelas organizadas por contrato.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="management-filter-bar">
+            <div class="filter-field">
+              <label for="contractSearch">Buscar cliente</label>
+              <input id="contractSearch" type="search" placeholder="Nome do cliente">
+            </div>
+            <div class="filter-field">
+              <label for="contractStatusFilter">Status</label>
+              <select id="contractStatusFilter">
+                <option value="all">Todos</option>
+                <option value="pending">Somente pendências</option>
+                <option value="confirmed">Confirmadas</option>
+                <option value="divergence">Com divergência</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label for="contractTypeFilter">Tipo</label>
+              <select id="contractTypeFilter">
+                <option value="all">Todos</option>
+                <option value="Aluguel">Aluguel</option>
+                <option value="Venda">Venda</option>
+              </select>
+            </div>
+            <div class="filter-field">
+              <label for="contractBillingFilter">Cobrança</label>
+              <select id="contractBillingFilter"></select>
+            </div>
+          </div>
+          <div id="managementContractsContainer"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h3>Prévia da cobrança</h3>
+            <p class="panel-subtitle">Somente variáveis marcadas como pagas entram nesta prévia.</p>
+          </div>
+        </div>
+        <div class="panel-body" id="managementInvoicePreview"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="contract-dialog" id="newContractDialog">
+    <div class="dialog-header">
+      <h3>Novo contrato</h3>
+      <button class="dialog-close" id="closeContractDialogButton" type="button" aria-label="Fechar">×</button>
+    </div>
+    <form class="contract-form" id="newContractForm">
+      <div class="filter-field">
+        <label for="newClient">Cliente</label>
+        <input id="newClient" name="client" type="text" required>
+      </div>
+      <div class="filter-field">
+        <label for="newType">Tipo</label>
+        <select id="newType" name="type" required>
+          <option value="Aluguel">Aluguel · 2,5%</option>
+          <option value="Venda">Venda · 1%</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="newCompetency">Competência da venda</label>
+        <select id="newCompetency" name="saleCompetency" required></select>
+      </div>
+      <div class="filter-field">
+        <label for="newTotalValue">Valor total do contrato</label>
+        <input id="newTotalValue" name="totalValue" type="number" min="0.01" step="0.01" required>
+      </div>
+      <div class="filter-field">
+        <label for="newInstallments">Quantidade de parcelas</label>
+        <input id="newInstallments" name="installmentCount" type="number" min="1" max="60" step="1" required>
+      </div>
+      <div class="filter-field">
+        <label for="newFirstReceipt">Primeiro recebimento previsto</label>
+        <select id="newFirstReceipt" name="firstReceiptMonth" required></select>
+      </div>
+      <div class="filter-field">
+        <label for="newFirstBilling">Primeira cobrança prevista</label>
+        <select id="newFirstBilling" name="firstBillingMonth" required></select>
+      </div>
+      <div class="contract-form-actions">
+        <button class="btn-secondary" id="cancelContractButton" type="button">Cancelar</button>
+        <button class="btn-primary" type="submit">Criar contrato</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="drawer-overlay" id="drawerOverlay" hidden></div>
+  <aside class="installment-drawer" id="contractDrawer" hidden aria-label="Editar contrato">
+    <div class="drawer-header">
+      <h3 id="contractDrawerTitle">Editar contrato</h3>
+      <button class="dialog-close" id="closeContractDrawerButton" type="button" aria-label="Fechar">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-context" id="contractDrawerContext"></div>
+      <form class="drawer-form" id="contractEditForm">
+        <div class="filter-field">
+          <label for="contractEditTotal">Valor total do contrato</label>
+          <input id="contractEditTotal" type="number" min="0.01" step="0.01">
+        </div>
+        <div class="filter-field">
+          <label for="contractEditInstallmentCount">Quantidade de parcelas</label>
+          <input id="contractEditInstallmentCount" type="number" min="1" max="60" step="1">
+        </div>
+        <div class="filter-field">
+          <label for="contractEditInstallmentValue">Valor da parcela</label>
+          <input id="contractEditInstallmentValue" type="number" min="0.01" step="0.01">
+        </div>
+        <div class="drawer-actions">
+          <button class="btn-secondary" id="contractEditCancelButton" type="button">Cancelar</button>
+          <button class="btn-primary" type="submit">Salvar contrato</button>
+        </div>
+      </form>
+    </div>
+  </aside>
+  <aside class="installment-drawer" id="installmentDrawer" hidden aria-label="Editar parcela">
+    <div class="drawer-header">
+      <h3 id="drawerTitle">Editar parcela</h3>
+      <button class="dialog-close" id="closeDrawerButton" type="button" aria-label="Fechar">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-context" id="drawerContext"></div>
+      <form class="drawer-form" id="installmentForm">
+        <div class="filter-field">
+          <label for="drawerReceivedMonth">Mês efetivamente recebido</label>
+          <select id="drawerReceivedMonth"></select>
+        </div>
+        <div class="filter-field">
+          <label for="drawerReceivedValue">Valor efetivamente recebido</label>
+          <input id="drawerReceivedValue" type="number" min="0" step="0.01">
+        </div>
+        <div class="filter-field">
+          <label for="drawerBillingMonth">Mês da cobrança variável</label>
+          <select id="drawerBillingMonth"></select>
+        </div>
+        <label class="payment-toggle">
+          <input id="drawerPaid" type="checkbox">
+          <span>Marcar variável como paga</span>
+        </label>
+        <div class="drawer-actions">
+          <button class="btn-secondary" id="drawerCancelButton" type="button">Cancelar</button>
+          <button class="btn-primary" type="submit">Salvar</button>
+        </div>
+        <button id="drawerConfirmationButton" type="button"></button>
+      </form>
+    </div>
+  </aside>
+
+  <script type="text/plain" id="legacyDashboardScript">
+    const charges = [
+      {
+        lead: "Lucas",
+        type: "Aluguel",
+        contractMonth: "Maio",
+        closingOrder: 2,
+        totalValue: 899900,
+        installments: 24,
+        paidInstallments: 0,
+        openInstallments: 24,
+        contractInstallment: 37495.83,
+        variableTotal: 22497.5,
+        variableInstallment: 937.4,
+        dueNow: 937.4
+      },
+      {
+        lead: "Rodolfo Barbosa",
+        type: "Aluguel",
+        contractMonth: "Abril",
+        closingOrder: 1,
+        totalValue: 129500,
+        installments: 4,
+        paidInstallments: 1,
+        openInstallments: 3,
+        contractInstallment: 35000,
+        variableTotal: 3237.5,
+        variableInstallment: 875,
+        dueNow: 875
+      },
+      {
+        lead: "GGTECH",
+        type: "Aluguel",
+        contractMonth: "Maio",
+        closingOrder: 3,
+        totalValue: 180000,
+        installments: 6,
+        paidInstallments: 0,
+        openInstallments: 6,
+        contractInstallment: 30000,
+        variableTotal: 4500,
+        variableInstallment: 750,
+        dueNow: 750
+      },
+      {
+        lead: "Rene",
+        type: "Aluguel",
+        contractMonth: "Maio",
+        closingOrder: 4,
+        totalValue: 180000,
+        installments: 6,
+        paidInstallments: 0,
+        openInstallments: 6,
+        contractInstallment: 30000,
+        variableTotal: 4500,
+        variableInstallment: 750,
+        dueNow: 750
+      },
+      {
+        lead: "Wellington",
+        type: "Aluguel",
+        contractMonth: "Maio",
+        closingOrder: 5,
+        totalValue: 162000,
+        installments: 6,
+        paidInstallments: 0,
+        openInstallments: 6,
+        contractInstallment: 27000,
+        variableTotal: 4050,
+        variableInstallment: 675,
+        dueNow: 675
+      }
+    ];
+
+    const previousPaid = [
+      {
+        lead: "Rodolfo Barbosa",
+        reference: "Abril",
+        type: "Aluguel",
+        paidInstallment: 1,
+        contractInstallment: 24500,
+        amountPaid: 612.5
+      }
+    ];
+
+    const sortedCharges = [...charges].sort((a, b) => a.closingOrder - b.closingOrder);
+
+    const brl = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+
+    const number = new Intl.NumberFormat("pt-BR", {
+      maximumFractionDigits: 0
+    });
+
+    function money(value) {
+      return brl.format(value);
+    }
+
+    const totalDue = charges.reduce((sum, item) => sum + item.dueNow, 0);
+    const previousPaidTotal = previousPaid.reduce((sum, item) => sum + item.amountPaid, 0);
+    const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const futureStart = { monthIndex: 5, year: 2026 };
+    const chargeByLead = new Map(charges.map((item) => [item.lead, item]));
+
+    function addMonths(start, offset) {
+      const absoluteMonth = start.monthIndex + offset;
+      return {
+        month: monthNames[absoluteMonth % 12],
+        year: start.year + Math.floor(absoluteMonth / 12)
+      };
+    }
+
+    function nextPaymentMonth(contractMonth, year = 2026) {
+      const monthIndex = monthNames.indexOf(contractMonth);
+      if (monthIndex < 0) return { month: contractMonth, year };
+      return addMonths({ monthIndex, year }, 1);
+    }
+
+    const monthlyFlows = [
+      {
+        month: "Abril",
+        year: 2026,
+        status: "Pago",
+        value: previousPaidTotal,
+        type: "paid",
+        details: previousPaid.map((item) => ({
+          lead: item.lead,
+          label: `Parcela paga ${item.paidInstallment}`,
+          contractInstallment: item.contractInstallment,
+          value: item.amountPaid,
+          entryType: "paid"
+        }))
+      },
+      {
+        month: "Maio",
+        year: 2026,
+        status: "A pagar agora",
+        value: totalDue,
+        type: "now",
+        details: sortedCharges.map((item) => ({
+          lead: item.lead,
+          label: "Cobrança atual",
+          contractInstallment: item.contractInstallment,
+          value: item.dueNow,
+          entryType: "now"
+        }))
+      }
+    ];
+
+    sortedCharges.forEach((item) => {
+      const paidSoFar = previousPaid
+        .filter((paid) => paid.lead === item.lead)
+        .reduce((sum, paid) => sum + paid.amountPaid, 0);
+      let remaining = Math.max(item.variableTotal - paidSoFar - item.dueNow, 0);
+      Array.from({ length: 36 }).forEach((_, index) => {
+        if (remaining <= 0) return;
+        const period = addMonths(futureStart, index);
+        const value = Math.min(item.variableInstallment, remaining);
+        let flow = monthlyFlows.find((entry) => entry.month === period.month && entry.year === period.year && entry.type === "future");
+        if (!flow) {
+          flow = { month: period.month, year: period.year, status: "Fluxo futuro", value: 0, type: "future", details: [] };
+          monthlyFlows.push(flow);
+        }
+        flow.value += value;
+        flow.details.push({
+          lead: item.lead,
+          label: "Parcela futura",
+          contractInstallment: item.contractInstallment,
+          value,
+          entryType: "future"
+        });
+        remaining -= value;
+      });
+    });
+
+    const yearsWithFlow = [...new Set(monthlyFlows.filter((item) => item.value > 0).map((item) => item.year))].sort();
+    const yearFilter = document.getElementById("yearFilter");
+    const monthFilter = document.getElementById("monthFilter");
+    yearFilter.innerHTML = yearsWithFlow.map((year) => `<option value="${year}">${year}</option>`).join("");
+    yearFilter.value = "2026";
+
+    function flowsForPeriod() {
+      const year = Number(yearFilter.value);
+      const month = monthFilter.value;
+      return monthlyFlows
+        .filter((item) => item.value > 0 && item.year === year)
+        .filter((item) => month === "all" || item.month === month)
+        .sort((a, b) => monthNames.indexOf(a.month) - monthNames.indexOf(b.month));
+    }
+
+    function flowsForYear() {
+      const year = Number(yearFilter.value);
+      return monthlyFlows
+        .filter((item) => item.value > 0 && item.year === year)
+        .sort((a, b) => monthNames.indexOf(a.month) - monthNames.indexOf(b.month));
+    }
+
+    function flowsForCards() {
+      const yearFlows = flowsForYear();
+      const selectedMonth = monthFilter.value;
+      const cardMonth = selectedMonth === "all"
+        ? (yearFlows.find((item) => item.type === "now") || yearFlows.find((item) => item.type !== "paid") || yearFlows[0])?.month
+        : selectedMonth;
+      return yearFlows.filter((item) => item.month === cardMonth);
+    }
+
+    function updateMonthOptions() {
+      const year = Number(yearFilter.value);
+      const availableMonths = monthlyFlows
+        .filter((item) => item.value > 0 && item.year === year)
+        .sort((a, b) => monthNames.indexOf(a.month) - monthNames.indexOf(b.month))
+        .map((item) => item.month);
+      const uniqueMonths = [...new Set(availableMonths)];
+      const previousValue = monthFilter.value || "all";
+      monthFilter.innerHTML = [
+        `<option value="all">Todos</option>`,
+        ...uniqueMonths.map((month) => `<option value="${month}">${month}</option>`)
+      ].join("");
+      monthFilter.value = uniqueMonths.includes(previousValue) ? previousValue : "all";
+    }
+
+    function getLeadAggregates(flows) {
+      const leadMap = new Map();
+      flows.forEach((flow) => {
+        flow.details.forEach((detail) => {
+          const charge = chargeByLead.get(detail.lead);
+          if (!charge) return;
+          if (!leadMap.has(detail.lead)) {
+            leadMap.set(detail.lead, {
+              charge,
+              lead: detail.lead,
+              months: new Set(),
+              variableValue: 0,
+              paidValue: 0
+            });
+          }
+          const item = leadMap.get(detail.lead);
+          item.months.add(flow.month);
+          item.variableValue += detail.value;
+          if (detail.entryType === "paid") {
+            item.paidValue += detail.value;
+          }
+        });
+      });
+      return [...leadMap.values()].sort((a, b) => a.charge.closingOrder - b.charge.closingOrder);
+    }
+
+    function getDetailRows(flows) {
+      return flows.flatMap((flow) => flow.details.map((detail) => {
+        const charge = chargeByLead.get(detail.lead);
+        return {
+          charge,
+          lead: detail.lead,
+          month: flow.month,
+          year: flow.year,
+          contractInstallment: detail.contractInstallment ?? charge.contractInstallment,
+          value: detail.value,
+          entryType: detail.entryType
+        };
+      }))
+        .filter((item) => item.charge)
+        .sort((a, b) => {
+          const monthDiff = monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
+          if (monthDiff !== 0) return monthDiff;
+          return a.charge.closingOrder - b.charge.closingOrder;
+        });
+    }
+
+    function getPaymentsForLead(lead, flows) {
+      const selectedPeriods = new Set(flows.map((flow) => `${flow.month}-${flow.year}`));
+      return previousPaid.filter((paid) => {
+        const paymentYear = 2026;
+        return paid.lead === lead && selectedPeriods.has(`${paid.reference}-${paymentYear}`);
+      });
+    }
+
+    function renderMonthlyFlow(flows) {
+      const maxValue = Math.max(...flows.map((item) => item.value), 1);
+      document.getElementById("monthlyFlowRows").innerHTML = flows.map((item) => `
+        <div class="month-row" role="button" tabindex="0" aria-label="Abrir detalhes de ${item.month} ${item.year}">
+          <div class="month-label">${item.month}<span>${item.year}</span></div>
+          <div class="month-track">
+            <div class="month-fill ${item.type}" style="width: ${(item.value / maxValue) * 100}%"></div>
+          </div>
+          <div class="month-value">
+            ${money(item.value)}
+            <span class="month-status">${item.status}</span>
+          </div>
+          <div class="month-details">
+            ${item.details.map((detail) => `
+              <div class="month-detail-row">
+                <strong>${detail.lead}</strong>
+                <span>${detail.label}</span>
+                <span class="money">${money(detail.value)}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".month-row").forEach((row) => {
+        const toggle = () => row.classList.toggle("open");
+        row.addEventListener("click", toggle);
+        row.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggle();
+          }
+        });
+      });
+    }
+
+    function renderDashboard() {
+      const flowRows = flowsForPeriod();
+      const leadAggregates = getLeadAggregates(flowRows);
+      const paidTotal = flowRows
+        .filter((item) => item.type === "paid")
+        .reduce((sum, item) => sum + item.value, 0);
+      const payableTotal = flowRows
+        .filter((item) => item.type !== "paid")
+        .reduce((sum, item) => sum + item.value, 0);
+      const detailRows = getDetailRows(flowRows);
+      const detailTotal = detailRows.reduce((sum, item) => sum + item.value, 0);
+      const contractTotal = leadAggregates.reduce((sum, item) => sum + item.charge.totalValue, 0);
+      const selectedMonth = monthFilter.value;
+      const periodLabel = selectedMonth === "all" ? yearFilter.value : `${selectedMonth} ${yearFilter.value}`;
+
+      document.getElementById("periodLabel").textContent = periodLabel;
+      document.getElementById("totalDue").textContent = money(payableTotal);
+      document.getElementById("headerTotal").textContent = money(detailTotal);
+      document.getElementById("tableTotal").textContent = money(detailTotal);
+      document.getElementById("detailSubtitle").textContent = selectedMonth === "all"
+        ? "Valores que compõem o pagamento no ano selecionado"
+        : "Valores que compõem o pagamento no mês selecionado";
+      document.getElementById("contractTotal").textContent = money(contractTotal);
+      document.getElementById("contractLeadCount").textContent = `${leadAggregates.length} ${leadAggregates.length === 1 ? "lead" : "leads"}`;
+      document.getElementById("paidVariableTotal").textContent = money(paidTotal);
+
+      renderMonthlyFlow(flowRows);
+
+      document.getElementById("chargeRows").innerHTML = detailRows.map((item) => {
+        const charge = item.charge;
+        return `
+          <tr>
+            <td><div class="lead">${item.lead}</div></td>
+            <td><span class="tag">${item.month}</span></td>
+            <td class="money">${money(charge.totalValue)}</td>
+            <td class="number">${charge.installments}</td>
+            <td class="number">${charge.paidInstallments}</td>
+            <td class="money">${money(item.contractInstallment)}</td>
+            <td class="money"><strong>${money(item.value)}</strong></td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("bars").innerHTML = sortedCharges.map((item) => {
+        const payments = previousPaid.filter((paid) => paid.lead === item.lead);
+        const paidValue = payments.reduce((sum, paid) => sum + paid.amountPaid, 0);
+        const paidPercent = item.installments ? (item.paidInstallments / item.installments) * 100 : 0;
+        const firstPayment = nextPaymentMonth(item.contractMonth);
+        return `
+          <div class="bar-row">
+            <div class="bar-top">
+              <strong>${item.lead}</strong>
+              <span class="bar-values">
+                <span>Competência: <strong>${item.contractMonth} 2026</strong></span>
+                <span>1º pagamento: <strong>${firstPayment.month} ${firstPayment.year}</strong></span>
+                <span>Total variável: <strong>${money(item.variableTotal)}</strong></span>
+                <span>Valor mensal: <strong>${money(item.variableInstallment)}</strong></span>
+                <span>Pago: <strong>${money(paidValue)}</strong></span>
+                <span>${item.paidInstallments}/${item.installments} parcelas</span>
+              </span>
+            </div>
+            <div class="track"><div class="fill" style="width: ${paidPercent}%"></div></div>
+            ${payments.length ? `
+              <div class="lead-payments">
+                ${payments.map((payment) => `
+                  <div class="lead-payment-row">
+                    <span>${payment.reference} · parcela ${payment.paidInstallment}</span>
+                    <strong>${money(payment.amountPaid)}</strong>
+                  </div>
+                `).join("")}
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    updateMonthOptions();
+    renderDashboard();
+    yearFilter.addEventListener("change", () => {
+      updateMonthOptions();
+      renderDashboard();
+    });
+    monthFilter.addEventListener("change", renderDashboard);
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const STORAGE_KEY = "automix-integrated-contract-management-v3";
+    const SUPABASE_URL = "https://rtzwxbztmoxceqvfyyck.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0end4Ynp0bW94Y2VxdmZ5eWNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTg2MjAsImV4cCI6MjA5OTE5NDYyMH0.72ptOvvAyQqxk-RO8FUele7yqArAsF9k3l-rTQcxxaU";
+    const supabaseEnabled = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
+    const supabaseClient = supabaseEnabled
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+    const MONTH_NAMES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const PERIODS = Array.from({ length: 72 }, (_, index) => {
+      const date = new Date(2026, index, 1);
+      return {
+        value: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`,
+        month: MONTH_NAMES[date.getMonth()],
+        year: date.getFullYear()
+      };
+    });
+
+    function shiftPeriod(value, offset) {
+      const [year, month] = value.split("-").map(Number);
+      const date = new Date(year, month - 1 + offset, 1);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function createInstallments(contractId, totalValue, count, firstReceiptMonth, firstBillingMonth) {
+      const regularValue = Math.round((Number(totalValue) / Number(count)) * 100) / 100;
+      let allocated = 0;
+      return Array.from({ length: count }, (_, index) => {
+        const plannedValue = index === count - 1
+          ? Math.round((Number(totalValue) - allocated) * 100) / 100
+          : regularValue;
+        allocated += plannedValue;
+        return {
+          id: `${contractId}-${index + 1}`,
+          number: index + 1,
+          plannedMonth: shiftPeriod(firstReceiptMonth, index),
+          plannedValue,
+          receivedMonth: shiftPeriod(firstReceiptMonth, index),
+          receivedValue: plannedValue,
+          billingMonth: shiftPeriod(firstBillingMonth, index),
+          confirmed: false
+        };
+      });
+    }
+
+    function activeInstallments(contract) {
+      return contract.installments.filter((installment) => !installment.archived);
+    }
+
+    function activeInstallmentCount(contract) {
+      return activeInstallments(contract).length;
+    }
+
+    function archivedInstallmentCount(contract) {
+      return contract.installments.filter((installment) => installment.archived).length;
+    }
+
+    function roundedMoneyValue(value) {
+      return Math.round((Number(value) || 0) * 100) / 100;
+    }
+
+    function nextInstallmentMonth(contract, field, fallback) {
+      const installments = activeInstallments(contract);
+      const last = [...installments]
+        .sort((a, b) => a.number - b.number)
+        .at(-1);
+      return last?.[field] ? shiftPeriod(last[field], 1) : fallback;
+    }
+
+    function renumberActiveInstallments(contract) {
+      activeInstallments(contract)
+        .sort((a, b) => a.number - b.number)
+        .forEach((installment, index) => {
+          installment.number = index + 1;
+        });
+    }
+
+    function applyContractStructure(contract, totalValue, requestedCount) {
+      const newTotal = roundedMoneyValue(totalValue);
+      const targetCount = Math.max(1, Math.min(60, Math.floor(Number(requestedCount) || 1)));
+      if (newTotal <= 0) return;
+
+      contract.totalValue = newTotal;
+      let active = activeInstallments(contract).sort((a, b) => a.number - b.number);
+
+      if (targetCount < active.length) {
+        const keep = active.slice(0, targetCount);
+        const keepIds = new Set(keep.map((installment) => installment.id));
+        contract.installments.forEach((installment) => {
+          if (!installment.archived && !keepIds.has(installment.id)) {
+            installment.archived = true;
+          }
+        });
+        active = keep;
+      }
+
+      if (targetCount > active.length) {
+        const firstReceipt = active[0]?.plannedMonth || shiftPeriod(contract.saleCompetency, 1);
+        const firstBilling = active[0]?.billingMonth || shiftPeriod(firstReceipt, 1);
+        while (active.length < targetCount) {
+          const number = active.length + 1;
+          const plannedMonth = nextInstallmentMonth(contract, "plannedMonth", shiftPeriod(firstReceipt, number - 1));
+          const billingMonth = nextInstallmentMonth(contract, "billingMonth", shiftPeriod(firstBilling, number - 1));
+          const installment = {
+            id: `${contract.id}-${Date.now()}-${number}`,
+            number,
+            plannedMonth,
+            plannedValue: 0,
+            receivedMonth: plannedMonth,
+            receivedValue: 0,
+            billingMonth,
+            confirmed: false
+          };
+          contract.installments.push(installment);
+          active.push(installment);
+        }
+      }
+
+      renumberActiveInstallments(contract);
+      active = activeInstallments(contract).sort((a, b) => a.number - b.number);
+      const confirmedTotal = active
+        .filter((installment) => installment.confirmed)
+        .reduce((sum, installment) => sum + Number(installment.plannedValue || 0), 0);
+      const pending = active.filter((installment) => !installment.confirmed);
+      const pendingTotal = Math.max(newTotal - confirmedTotal, 0);
+      const regularPendingValue = pending.length ? roundedMoneyValue(pendingTotal / pending.length) : 0;
+      let allocated = 0;
+
+      pending.forEach((installment, index) => {
+        const plannedValue = index === pending.length - 1
+          ? roundedMoneyValue(pendingTotal - allocated)
+          : regularPendingValue;
+        allocated += plannedValue;
+        installment.plannedValue = plannedValue;
+        installment.receivedValue = plannedValue;
+      });
+    }
+
+    function previewInstallmentValue(contract, installment, totalValue, requestedCount) {
+      if (installment.confirmed) return Number(installment.plannedValue) || 0;
+      const newTotal = roundedMoneyValue(totalValue);
+      const targetCount = Math.max(1, Math.min(60, Math.floor(Number(requestedCount) || 1)));
+      if (newTotal <= 0 || installment.number > targetCount) return 0;
+
+      const active = activeInstallments(contract).filter((item) => item.number <= targetCount);
+      const confirmedTotal = active
+        .filter((item) => item.confirmed)
+        .reduce((sum, item) => sum + Number(item.plannedValue || 0), 0);
+      const pendingCount = active.filter((item) => !item.confirmed).length
+        + Math.max(targetCount - active.length, 0);
+      if (!pendingCount) return Number(installment.plannedValue) || 0;
+
+      const pendingTotal = Math.max(newTotal - confirmedTotal, 0);
+      const regularPendingValue = roundedMoneyValue(pendingTotal / pendingCount);
+      const pendingBefore = active
+        .filter((item) => !item.confirmed && item.number < installment.number)
+        .length;
+      return pendingBefore === pendingCount - 1
+        ? roundedMoneyValue(pendingTotal - (regularPendingValue * pendingBefore))
+        : regularPendingValue;
+    }
+
+    function contractRegularInstallmentValue(totalValue, requestedCount) {
+      const count = Math.max(1, Math.min(60, Math.floor(Number(requestedCount) || 1)));
+      return roundedMoneyValue((Number(totalValue) || 0) / count);
+    }
+
+    const DEFAULT_STATE = {
+      billingFilter: "2026-07",
+      clientConfirmations: {},
+      contracts: [
+        {
+          id: "lucas",
+          client: "Lucas",
+          type: "Aluguel",
+          saleCompetency: "2026-05",
+          totalValue: 899900,
+          installments: createInstallments("lucas", 899900, 24, "2026-06", "2026-07")
+        },
+        {
+          id: "rodolfo",
+          client: "Rodolfo Barbosa",
+          type: "Aluguel",
+          saleCompetency: "2026-04",
+          totalValue: 129500,
+          installments: [
+            { id: "rodolfo-1", number: 1, plannedMonth: "2026-05", plannedValue: 24500, receivedMonth: "2026-05", receivedValue: 24500, billingMonth: "2026-06", confirmed: true },
+            { id: "rodolfo-2", number: 2, plannedMonth: "2026-06", plannedValue: 35000, receivedMonth: "2026-05", receivedValue: 35000, billingMonth: "2026-06", confirmed: true },
+            { id: "rodolfo-3", number: 3, plannedMonth: "2026-07", plannedValue: 35000, receivedMonth: "2026-06", receivedValue: 0, billingMonth: "2026-07", confirmed: true },
+            { id: "rodolfo-4", number: 4, plannedMonth: "2026-08", plannedValue: 35000, receivedMonth: "2026-08", receivedValue: 35000, billingMonth: "2026-09", confirmed: false }
+          ]
+        },
+        {
+          id: "ggtech",
+          client: "GGTECH",
+          type: "Aluguel",
+          saleCompetency: "2026-05",
+          totalValue: 180000,
+          installments: createInstallments("ggtech", 180000, 6, "2026-06", "2026-07").map((installment, index) =>
+            index === 0 ? { ...installment, receivedValue: 15000 } : installment
+          )
+        },
+        {
+          id: "rene",
+          client: "Rene",
+          type: "Aluguel",
+          saleCompetency: "2026-05",
+          totalValue: 180000,
+          installments: createInstallments("rene", 180000, 6, "2026-06", "2026-07")
+        },
+        {
+          id: "wellington",
+          client: "Wellington",
+          type: "Aluguel",
+          saleCompetency: "2026-05",
+          totalValue: 162000,
+          installments: createInstallments("wellington", 162000, 6, "2026-06", "2026-07")
+        }
+      ]
+    };
+
+    const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+    const money = (value) => brl.format(Number(value) || 0);
+    const cloneDefaults = () => JSON.parse(JSON.stringify(DEFAULT_STATE));
+    const periodInfo = (value) => PERIODS.find((period) => period.value === value);
+    const periodLabel = (value) => {
+      const period = periodInfo(value);
+      return period ? `${period.month} ${period.year}` : value;
+    };
+    const rateFor = (type) => type === "Venda" ? 0.01 : 0.025;
+    const variableFor = (contract, installment) =>
+      installment.confirmed ? Math.max(Number(installment.receivedValue) || 0, 0) * rateFor(contract.type) : 0;
+    const contractVariableTotal = (contract) =>
+      Math.max(Number(contract.totalValue) || 0, 0) * rateFor(contract.type);
+    const LOGIN_KEY = "automix-dashboard-role";
+    const ACCESS_PASSWORDS = {
+      client: "Automix-Cliente",
+      admin: "Automix-KytnSxQd"
+    };
+
+    function loadLocalState() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!stored?.contracts) return cloneDefaults();
+        return { ...cloneDefaults(), ...stored, clientConfirmations: stored.clientConfirmations || {} };
+      } catch (_) {
+        return cloneDefaults();
+      }
+    }
+
+    function localSaveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    const fromDbContract = (contract) => ({
+      id: contract.id,
+      client: contract.client,
+      type: contract.type,
+      saleCompetency: contract.sale_competency,
+      totalValue: Number(contract.total_value) || 0,
+      installments: [...(contract.installments || [])]
+        .sort((a, b) => Number(a.number) - Number(b.number))
+        .map((installment) => ({
+          id: installment.id,
+          number: Number(installment.number) || 1,
+          plannedMonth: installment.planned_month,
+          plannedValue: Number(installment.planned_value) || 0,
+          receivedMonth: installment.received_month,
+          receivedValue: Number(installment.received_value) || 0,
+          billingMonth: installment.billing_month,
+          confirmed: Boolean(installment.confirmed),
+          paid: Boolean(installment.paid),
+          archived: Boolean(installment.archived)
+        }))
+    });
+
+    const toDbContract = (contract) => ({
+      id: contract.id,
+      client: contract.client,
+      type: contract.type,
+      sale_competency: contract.saleCompetency,
+      total_value: roundedMoneyValue(contract.totalValue)
+    });
+
+    const toDbInstallment = (contract, installment) => ({
+      id: installment.id,
+      contract_id: contract.id,
+      number: Number(installment.number) || 1,
+      planned_month: installment.plannedMonth,
+      planned_value: roundedMoneyValue(installment.plannedValue),
+      received_month: installment.receivedMonth,
+      received_value: roundedMoneyValue(installment.receivedValue),
+      billing_month: installment.billingMonth,
+      confirmed: Boolean(installment.confirmed),
+      paid: Boolean(installment.paid),
+      archived: Boolean(installment.archived)
+    });
+
+    const fromDbConfirmation = (confirmation) => ({
+      confirmed: true,
+      confirmedAt: confirmation.confirmed_at,
+      amount: Number(confirmation.amount) || 0,
+      contractId: confirmation.contract_id,
+      installmentId: confirmation.installment_id,
+      billingMonth: confirmation.billing_month
+    });
+
+    const toDbConfirmation = (key, confirmation) => ({
+      id: key,
+      contract_id: confirmation.contractId,
+      installment_id: confirmation.installmentId,
+      billing_month: confirmation.billingMonth,
+      amount: roundedMoneyValue(confirmation.amount),
+      confirmed_at: confirmation.confirmedAt
+    });
+
+    async function loadRemoteState() {
+      const [{ data: contracts, error: contractsError }, { data: confirmations, error: confirmationsError }] = await Promise.all([
+        supabaseClient
+          .from("contracts")
+          .select("*, installments(*)")
+          .order("client", { ascending: true }),
+        supabaseClient
+          .from("client_charge_confirmations")
+          .select("*")
+      ]);
+      if (contractsError) throw contractsError;
+      if (confirmationsError) throw confirmationsError;
+      const remoteState = {
+        ...cloneDefaults(),
+        billingFilter: localStorage.getItem(`${STORAGE_KEY}:billingFilter`) || cloneDefaults().billingFilter,
+        contracts: (contracts || []).map(fromDbContract),
+        clientConfirmations: {}
+      };
+      (confirmations || []).forEach((confirmation) => {
+        remoteState.clientConfirmations[confirmation.id] = fromDbConfirmation(confirmation);
+      });
+      remoteDatabaseWasEmpty = remoteState.contracts.length === 0;
+      return remoteDatabaseWasEmpty ? { ...cloneDefaults(), clientConfirmations: remoteState.clientConfirmations } : remoteState;
+    }
+
+    async function loadProfileRole() {
+      if (!supabaseEnabled) return sessionStorage.getItem(LOGIN_KEY);
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session?.user) return null;
+      const { data, error } = await supabaseClient
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .single();
+      if (error || !["admin", "client"].includes(data?.role)) return null;
+      return data.role;
+    }
+
+    async function syncRemoteClientConfirmations() {
+      const confirmations = Object.entries(state.clientConfirmations || {}).map(([key, confirmation]) =>
+        toDbConfirmation(key, confirmation)
+      );
+      const { data: storedConfirmations, error: listError } = await supabaseClient
+        .from("client_charge_confirmations")
+        .select("id");
+      if (listError) throw listError;
+      const currentIds = new Set(confirmations.map((confirmation) => confirmation.id));
+      const staleIds = (storedConfirmations || []).map((item) => item.id).filter((id) => !currentIds.has(id));
+      if (staleIds.length) {
+        const { error } = await supabaseClient
+          .from("client_charge_confirmations")
+          .delete()
+          .in("id", staleIds);
+        if (error) throw error;
+      }
+      if (confirmations.length) {
+        const { error } = await supabaseClient
+          .from("client_charge_confirmations")
+          .upsert(confirmations, { onConflict: "id" });
+        if (error) throw error;
+      }
+    }
+
+    async function syncRemoteState() {
+      const contracts = state.contracts.map(toDbContract);
+      const installments = state.contracts.flatMap((contract) =>
+        contract.installments.map((installment) => toDbInstallment(contract, installment))
+      );
+      if (contracts.length) {
+        const { error: contractError } = await supabaseClient
+          .from("contracts")
+          .upsert(contracts, { onConflict: "id" });
+        if (contractError) throw contractError;
+      }
+      if (installments.length) {
+        const { error: installmentError } = await supabaseClient
+          .from("installments")
+          .upsert(installments, { onConflict: "id" });
+        if (installmentError) throw installmentError;
+      }
+      await syncRemoteClientConfirmations();
+    }
+
+    async function deleteRemoteContract(contractId) {
+      if (!supabaseEnabled || currentRole !== "admin") return;
+      const { error } = await supabaseClient.from("contracts").delete().eq("id", contractId);
+      if (error) throw error;
+    }
+
+    let state = cloneDefaults();
+    let remoteDatabaseWasEmpty = false;
+    const managementUi = {
+      expandedId: null,
+      fullScheduleIds: new Set(),
+      showConfirmedIds: new Set(),
+      selectedContractEditId: null,
+      selectedContractId: null,
+      selectedInstallmentId: null,
+      search: "",
+      status: "all",
+      type: "all",
+      billing: "all"
+    };
+
+    const escapeHtml = (value) => String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+    let currentRole = null;
+
+    function applyAccess(role) {
+      currentRole = role;
+      const isAdmin = role === "admin";
+      document.getElementById("loginView").hidden = true;
+      document.getElementById("appShell").hidden = false;
+      document.querySelector('[data-tab="managementTab"]').hidden = !isAdmin;
+      if (!isAdmin) activateTab("dashboardTab");
+    }
+
+    function showLogin() {
+      currentRole = null;
+      sessionStorage.removeItem(LOGIN_KEY);
+      if (supabaseEnabled) supabaseClient.auth.signOut();
+      document.getElementById("appShell").hidden = true;
+      document.getElementById("loginView").hidden = false;
+      document.getElementById("loginEmail").value = "";
+      document.getElementById("loginPassword").value = "";
+    }
+
+    function saveState() {
+      localStorage.setItem(`${STORAGE_KEY}:billingFilter`, state.billingFilter);
+      if (!supabaseEnabled) {
+        localSaveState();
+        return Promise.resolve();
+      }
+      return (currentRole === "admin" ? syncRemoteState() : syncRemoteClientConfirmations()).catch((error) => {
+        console.error("Erro ao salvar no Supabase", error);
+        document.getElementById("loginError").textContent = "Não foi possível salvar no Supabase. Verifique a conexão e as políticas.";
+      });
+    }
+
+    function allRecords() {
+      return state.contracts.flatMap((contract) =>
+        activeInstallments(contract).map((installment) => ({ contract, installment }))
+      );
+    }
+
+    function confirmedRecords() {
+      return allRecords().filter(({ installment }) => installment.confirmed);
+    }
+
+    function clientValidatedRecords() {
+      return confirmedRecords().filter(({ contract, installment }) =>
+        clientConfirmationForCharge(contract, installment)
+      );
+    }
+
+    function monthOptions(selected) {
+      return PERIODS.map((period) =>
+        `<option value="${period.value}" ${period.value === selected ? "selected" : ""}>${periodLabel(period.value)}</option>`
+      ).join("");
+    }
+
+    function uniqueContractId(client) {
+      const base = client
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || "contrato";
+      let candidate = base;
+      let suffix = 2;
+      while (state.contracts.some((contract) => contract.id === candidate)) {
+        candidate = `${base}-${suffix}`;
+        suffix += 1;
+      }
+      return candidate;
+    }
+
+    function activateTab(tabId) {
+      if (tabId === "managementTab" && currentRole !== "admin") tabId = "dashboardTab";
+      if (tabId !== "managementTab") closeDrawers();
+      document.querySelectorAll(".tab-panel").forEach((panel) => {
+        panel.hidden = panel.id !== tabId;
+      });
+      document.querySelectorAll(".tab-button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === tabId);
+      });
+    }
+
+    document.querySelectorAll(".tab-button[data-tab]").forEach((button) => {
+      button.addEventListener("click", () => activateTab(button.dataset.tab));
+    });
+
+    const yearFilter = document.getElementById("yearFilter");
+    const monthFilter = document.getElementById("monthFilter");
+    const billingFilter = document.getElementById("billingFilter");
+    const contractSearch = document.getElementById("contractSearch");
+    const contractStatusFilter = document.getElementById("contractStatusFilter");
+    const contractTypeFilter = document.getElementById("contractTypeFilter");
+    const contractBillingFilter = document.getElementById("contractBillingFilter");
+
+    function updateDashboardFilters() {
+      const years = [...new Set(PERIODS.map((period) => period.year))];
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = MONTH_NAMES[now.getMonth()];
+      const previousYear = Number(yearFilter.value) || (years.includes(currentYear) ? currentYear : 2026);
+      yearFilter.innerHTML = years.map((year) => `<option value="${year}">${year}</option>`).join("");
+      yearFilter.value = years.includes(previousYear) ? String(previousYear) : String(years[0]);
+
+      const selectedYear = Number(yearFilter.value);
+      const available = PERIODS
+        .filter((period) => period.year === selectedYear)
+        .map((period) => period.month);
+      const previousMonth = monthFilter.value || (selectedYear === currentYear ? currentMonth : "all");
+      monthFilter.innerHTML = [
+        `<option value="all">Todos</option>`,
+        ...available.map((month) => `<option value="${month}">${month}</option>`)
+      ].join("");
+      monthFilter.value = available.includes(previousMonth) ? previousMonth : "all";
+    }
+
+    function dashboardSelection() {
+      const year = Number(yearFilter.value);
+      const month = monthFilter.value;
+      return confirmedRecords().filter(({ installment }) => {
+        const period = periodInfo(installment.billingMonth);
+        return period && period.year === year && (month === "all" || period.month === month);
+      });
+    }
+
+    function selectedDashboardPeriodKey() {
+      const year = Number(yearFilter.value);
+      const month = monthFilter.value;
+      if (month === "all") return null;
+      const period = PERIODS.find((item) => item.year === year && item.month === month);
+      return period?.value || null;
+    }
+
+    function chargeConfirmationKey(contract, installment) {
+      return `${contract.id}:${installment.id}:${installment.billingMonth}`;
+    }
+
+    function clientConfirmationForCharge(contract, installment) {
+      const key = chargeConfirmationKey(contract, installment);
+      const confirmation = state.clientConfirmations?.[key];
+      const amount = variableFor(contract, installment);
+      return confirmation?.confirmed && roundedMoneyValue(confirmation.amount) === roundedMoneyValue(amount)
+        ? confirmation
+        : null;
+    }
+
+    function renderClientConfirmation(selected, selectedVariable) {
+      const periodKey = selectedDashboardPeriodKey();
+      const status = document.getElementById("clientConfirmationStatus");
+      const amount = document.getElementById("clientConfirmationAmount");
+      const validateAllButton = document.getElementById("validateAllClientChargesButton");
+      amount.textContent = money(selectedVariable);
+
+      if (!periodKey) {
+        status.textContent = "Selecione um mês";
+        status.className = "tag";
+        validateAllButton.hidden = true;
+        return;
+      }
+
+      const confirmedCount = selected.filter(({ contract, installment }) =>
+        clientConfirmationForCharge(contract, installment)
+      ).length;
+      const pendingCount = Math.max(selected.length - confirmedCount, 0);
+      validateAllButton.hidden = !pendingCount;
+      validateAllButton.textContent = pendingCount > 1 ? `Validar ${pendingCount} cobranças` : "Validar cobrança";
+      if (selected.length && confirmedCount === selected.length) {
+        status.textContent = "Tudo validado";
+        status.className = "tag status-confirmed";
+      } else {
+        status.textContent = selected.length ? `${confirmedCount}/${selected.length} validadas` : "Sem cobranças";
+        status.className = "tag status-pending";
+      }
+    }
+
+    async function validateAllClientChargesForSelection() {
+      const selected = dashboardSelection();
+      const pending = selected.filter(({ contract, installment }) =>
+        !clientConfirmationForCharge(contract, installment)
+      );
+      if (!pending.length) return;
+
+      state.clientConfirmations = state.clientConfirmations || {};
+      pending.forEach(({ contract, installment }) => {
+        const key = chargeConfirmationKey(contract, installment);
+        state.clientConfirmations[key] = {
+          confirmed: true,
+          confirmedAt: new Date().toISOString(),
+          amount: roundedMoneyValue(variableFor(contract, installment)),
+          contractId: contract.id,
+          installmentId: installment.id,
+          billingMonth: installment.billingMonth
+        };
+      });
+      await saveState();
+      renderDashboard();
+    }
+
+    function renderMonthlyFlow() {
+      const year = Number(yearFilter.value);
+      const grouped = new Map();
+      allRecords().forEach(({ contract, installment }) => {
+        const period = periodInfo(installment.billingMonth);
+        if (!period || period.year !== year) return;
+        if (!grouped.has(installment.billingMonth)) {
+          grouped.set(installment.billingMonth, { period, confirmedValue: 0, forecastValue: 0, details: [] });
+        }
+        const group = grouped.get(installment.billingMonth);
+        const validated = installment.confirmed && clientConfirmationForCharge(contract, installment);
+        const variable = installment.confirmed
+          ? variableFor(contract, installment)
+          : Math.max(Number(installment.plannedValue) || 0, 0) * rateFor(contract.type);
+        if (validated) {
+          group.confirmedValue += variable;
+        } else {
+          group.forecastValue += variable;
+        }
+        group.details.push({
+          client: contract.client,
+          value: variable,
+          status: validated ? "Validado" : installment.confirmed ? "A validar" : "Previsão",
+          label: installment.confirmed
+            ? `Parcela ${installment.number} · recebimento conferido em ${periodLabel(installment.receivedMonth)}`
+            : `Parcela ${installment.number} · cobrança prevista`
+        });
+      });
+
+      const flows = [...grouped.values()].sort((a, b) => a.period.value.localeCompare(b.period.value));
+      const maxValue = Math.max(...flows.map((flow) => flow.confirmedValue + flow.forecastValue), 1);
+      document.getElementById("monthlyFlowRows").innerHTML = flows.length ? flows.map((flow) => `
+        <div class="month-row" role="button" tabindex="0" aria-label="Abrir detalhes de ${flow.period.month} ${flow.period.year}">
+          <div class="month-label">${flow.period.month}<span>${flow.period.year}</span></div>
+          <div class="month-track">
+            ${flow.confirmedValue ? `<div class="month-fill now" style="width: ${(flow.confirmedValue / maxValue) * 100}%"></div>` : ""}
+            ${flow.forecastValue ? `<div class="month-fill forecast" style="width: ${(flow.forecastValue / maxValue) * 100}%"></div>` : ""}
+          </div>
+          <div class="month-value">
+            ${money(flow.confirmedValue + flow.forecastValue)}
+            <span class="month-status">${money(flow.confirmedValue)} validado · ${money(flow.forecastValue)} a validar/previsão</span>
+          </div>
+          <div class="month-details">
+            ${flow.details.map((detail) => `
+              <div class="month-detail-row">
+                <span class="month-detail-client">${detail.client}</span>
+                <span class="month-detail-copy"><span class="contract-detail-status ${detail.status === "Validado" ? "confirmed" : "forecast"}">${detail.status}</span>${detail.label}</span>
+                <span class="money">${money(detail.value)}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `).join("") : `<div class="empty-state">Nenhuma variável prevista para ${year}.</div>`;
+
+      document.querySelectorAll(".month-row").forEach((row) => {
+        const toggle = () => row.classList.toggle("open");
+        row.addEventListener("click", toggle);
+        row.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggle();
+          }
+        });
+      });
+    }
+
+    function renderDashboard() {
+      const selected = dashboardSelection();
+      const selectedVariable = selected.reduce((sum, item) => sum + variableFor(item.contract, item.installment), 0);
+      const selectedContracts = [...new Set(selected.map(({ contract }) => contract.id))];
+      const totalContractValue = state.contracts.reduce((sum, contract) => sum + contract.totalValue, 0);
+      const year = Number(yearFilter.value);
+      const yearValidated = clientValidatedRecords().filter(({ installment }) => periodInfo(installment.billingMonth)?.year === year);
+      const yearVariable = yearValidated.reduce((sum, item) => sum + variableFor(item.contract, item.installment), 0);
+      const selectedMonth = monthFilter.value;
+
+      document.getElementById("periodLabel").textContent = selectedMonth === "all" ? String(year) : `${selectedMonth} ${year}`;
+      document.getElementById("totalDue").textContent = money(selectedVariable);
+      document.getElementById("headerTotal").textContent = money(selectedVariable);
+      document.getElementById("tableTotal").textContent = money(selectedVariable);
+      document.getElementById("contractTotal").textContent = money(totalContractValue);
+      document.getElementById("contractLeadCount").textContent = `${state.contracts.length} contratos`;
+      document.getElementById("paidVariableTotal").textContent = money(yearVariable);
+      document.getElementById("detailSubtitle").textContent = selectedMonth === "all"
+        ? "Cobranças confirmadas internamente para validação no ano selecionado"
+        : "Cobranças confirmadas internamente para validação no mês selecionado";
+      renderClientConfirmation(selected, selectedVariable);
+
+      renderMonthlyFlow();
+
+      document.getElementById("chargeRows").innerHTML = selected.length ? selected.map(({ contract, installment }) => {
+        const installments = activeInstallments(contract);
+        const paidCount = installments.filter((item) => clientConfirmationForCharge(contract, item)).length;
+        const billing = periodInfo(installment.billingMonth);
+        const variable = variableFor(contract, installment);
+        const key = chargeConfirmationKey(contract, installment);
+        const storedConfirmation = state.clientConfirmations?.[key];
+        const validConfirmation = clientConfirmationForCharge(contract, installment);
+        const actionLabel = validConfirmation ? "Validado" : storedConfirmation ? "Revisar cobrança" : "Validar cobrança";
+        const actionClass = validConfirmation ? "btn-confirmed" : "btn-primary";
+        return `
+          <tr>
+            <td><div class="lead">${contract.client}</div></td>
+            <td><span class="tag">${billing?.month || installment.billingMonth}</span></td>
+            <td class="money">${money(contract.totalValue)}</td>
+            <td class="number">${installments.length}</td>
+            <td class="number">${paidCount}</td>
+            <td class="money">${money(installment.receivedValue)}</td>
+            <td class="money">
+              <div class="charge-validation">
+                <strong>${money(variable)}</strong>
+                <button
+                  class="${actionClass}"
+                  type="button"
+                  data-client-confirm-charge="${key}"
+                  data-client-contract="${contract.id}"
+                  data-client-installment="${installment.id}"
+                >${actionLabel}</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("") : `<tr><td colspan="7">Nenhuma cobrança confirmada no período.</td></tr>`;
+
+      document.getElementById("bars").innerHTML = state.contracts.map((contract) => {
+        const installments = activeInstallments(contract);
+        const archivedCount = archivedInstallmentCount(contract);
+        const confirmed = installments.filter((item) => item.confirmed);
+        const validated = confirmed.filter((item) => clientConfirmationForCharge(contract, item));
+        const paid = confirmed.filter((item) => item.paid);
+        const upcoming = installments
+          .filter((item) => !item.confirmed)
+          .sort((a, b) => a.billingMonth.localeCompare(b.billingMonth) || a.number - b.number)
+          .slice(0, 3);
+        const progress = installments.length ? (paid.length / installments.length) * 100 : 0;
+        const firstPayment = [...installments].sort((a, b) => a.receivedMonth.localeCompare(b.receivedMonth))[0];
+        const paidVariable = paid.reduce((sum, item) => sum + variableFor(contract, item), 0);
+        return `
+          <div class="bar-row">
+            <div class="bar-top">
+              <strong>${contract.client}</strong>
+              <span class="bar-values">
+                <span>Competência: <strong>${periodLabel(contract.saleCompetency)}</strong></span>
+                <span>1º pagamento: <strong>${firstPayment ? periodLabel(firstPayment.receivedMonth) : "—"}</strong></span>
+                <span>Variável total: <strong>${money(contractVariableTotal(contract))}</strong></span>
+                <span>Valor total do contrato: <strong>${money(contract.totalValue)}</strong></span>
+                <span>Pago: <strong>${money(paidVariable)}</strong></span>
+                <span>${paid.length}/${installments.length} parcelas</span>
+              </span>
+            </div>
+            <div class="track"><div class="fill" style="width: ${progress}%"></div></div>
+            <details class="contract-details">
+              <summary>Detalhes das parcelas · ${paid.length} pagas · ${validated.length} validadas · ${confirmed.length - paid.length} em aberto</summary>
+              <div class="lead-payments">
+                ${confirmed.length ? confirmed.map((installment) => {
+                  const isPaid = Boolean(installment.paid);
+                  const isValidated = clientConfirmationForCharge(contract, installment);
+                  const statusClass = isPaid || isValidated ? "confirmed" : "forecast";
+                  const statusText = isPaid ? "Paga" : isValidated ? "Validada" : "A validar";
+                  return `
+                    <div class="lead-payment-row">
+                      <span><span class="contract-detail-status ${statusClass}">${statusText}</span>Parcela ${installment.number} · recebida ${periodLabel(installment.receivedMonth)} · cobrança ${periodLabel(installment.billingMonth)}</span>
+                      <strong>${money(variableFor(contract, installment))}</strong>
+                    </div>
+                  `;
+                }).join("") : `<div class="lead-payment-row"><span>Nenhuma parcela confirmada na gestão.</span><strong>—</strong></div>`}
+                ${upcoming.map((installment) => `
+                  <div class="lead-payment-row">
+                    <span><span class="contract-detail-status forecast">Próxima</span>Parcela ${installment.number} · cobrança ${periodLabel(installment.billingMonth)}</span>
+                    <strong>${money(Number(installment.plannedValue || 0) * rateFor(contract.type))}</strong>
+                  </div>
+                `).join("")}
+              </div>
+            </details>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function selectedBillingRecords() {
+      return confirmedRecords().filter(({ installment }) => installment.billingMonth === state.billingFilter && installment.paid);
+    }
+
+    async function updateInstallment(contractId, installmentId, field, value) {
+      const contract = state.contracts.find((item) => item.id === contractId);
+      const installment = contract?.installments.find((item) => item.id === installmentId && !item.archived);
+      if (!installment || installment.confirmed) return;
+      installment[field] = field === "receivedValue" ? Math.max(Number(value) || 0, 0) : value;
+      await saveState();
+      renderAll();
+    }
+
+    async function setConfirmation(contractId, installmentId, confirmed) {
+      const contract = state.contracts.find((item) => item.id === contractId);
+      const installment = contract?.installments.find((item) => item.id === installmentId && !item.archived);
+      if (!installment) return;
+      installment.confirmed = confirmed;
+      await saveState();
+      updateDashboardFilters();
+      renderAll();
+    }
+
+    async function deleteContract(contractId) {
+      const contract = state.contracts.find((item) => item.id === contractId);
+      if (!contract) return;
+      const ok = window.confirm(`Excluir o contrato de ${contract.client}? Esta ação remove o contrato da gestão e da dashboard.`);
+      if (!ok) return;
+      await deleteRemoteContract(contractId);
+      state.contracts = state.contracts.filter((item) => item.id !== contractId);
+      Object.keys(state.clientConfirmations || {}).forEach((key) => {
+        if (key.startsWith(`${contractId}:`)) delete state.clientConfirmations[key];
+      });
+      if (managementUi.expandedId === contractId) managementUi.expandedId = null;
+      if (managementUi.selectedContractEditId === contractId) closeContractDrawer();
+      if (managementUi.selectedContractId === contractId) closeInstallmentDrawer();
+      await saveState();
+      updateDashboardFilters();
+      renderAll();
+    }
+
+    function renderManagementMetrics() {
+      const selected = selectedBillingRecords();
+      const paid = selected.filter(({ installment }) => installment.paid);
+      const base = paid.reduce((sum, item) => sum + Number(item.installment.receivedValue || 0), 0);
+      const variable = paid.reduce((sum, item) => sum + variableFor(item.contract, item.installment), 0);
+      const pending = allRecords().filter(({ installment }) => !installment.confirmed).length;
+      document.getElementById("managementVariable").textContent = money(variable);
+      document.getElementById("managementBase").textContent = money(base);
+      document.getElementById("managementPending").textContent = pending;
+      document.getElementById("managementContracts").textContent = state.contracts.length;
+    }
+
+    function installmentFlags(installment) {
+      const flags = [];
+      if (Number(installment.receivedValue) === 0) {
+        flags.push({ label: "Sem recebimento", className: "danger" });
+      } else if (Number(installment.receivedValue) < Number(installment.plannedValue)) {
+        flags.push({ label: "Parcial", className: "warning" });
+      } else if (Number(installment.receivedValue) > Number(installment.plannedValue)) {
+        flags.push({ label: "Acima do previsto", className: "warning" });
+      }
+      return flags;
+    }
+
+    function installmentHasDivergence(installment) {
+      return installmentFlags(installment).length > 0;
+    }
+
+    function filteredContracts() {
+      const search = managementUi.search.trim().toLocaleLowerCase("pt-BR");
+      return state.contracts.filter((contract) => {
+        if (search && !contract.client.toLocaleLowerCase("pt-BR").includes(search)) return false;
+        if (managementUi.type !== "all" && contract.type !== managementUi.type) return false;
+        const relevant = activeInstallments(contract).filter((installment) => {
+          if (managementUi.billing !== "all" && installment.billingMonth !== managementUi.billing) return false;
+          if (managementUi.status === "pending") return !installment.confirmed;
+          if (managementUi.status === "confirmed") return installment.confirmed;
+          if (managementUi.status === "divergence") return installmentHasDivergence(installment);
+          return true;
+        });
+        return relevant.length > 0;
+      });
+    }
+
+    function contractVisibleInstallments(contract) {
+      let installments = [...activeInstallments(contract)].sort((a, b) =>
+        a.plannedMonth.localeCompare(b.plannedMonth) || a.number - b.number
+      );
+
+      if (managementUi.billing !== "all") {
+        installments = installments.filter((installment) => installment.billingMonth === managementUi.billing);
+      }
+      if (managementUi.status === "pending") {
+        installments = installments.filter((installment) => !installment.confirmed);
+      } else if (managementUi.status === "confirmed") {
+        installments = installments.filter((installment) => installment.confirmed);
+      } else if (managementUi.status === "divergence") {
+        installments = installments.filter(installmentHasDivergence);
+      } else if (!managementUi.showConfirmedIds.has(contract.id)) {
+        installments = installments.filter((installment) => !installment.confirmed);
+      }
+
+      const total = installments.length;
+      if (!managementUi.fullScheduleIds.has(contract.id)) installments = installments.slice(0, 3);
+      return { installments, total };
+    }
+
+    function renderCompactRow(contract, installment) {
+      const flags = installmentFlags(installment);
+      const installmentTotal = activeInstallmentCount(contract);
+      return `
+        <tr class="compact-row" data-edit-contract="${contract.id}" data-edit-installment="${installment.id}">
+          <td>
+            <strong>${installment.number}/${installmentTotal}</strong>
+            ${flags.length ? `<div class="row-flags">${flags.map((flag) => `<span class="flag ${flag.className}">${flag.label}</span>`).join("")}</div>` : ""}
+          </td>
+          <td>${periodLabel(contract.saleCompetency)}</td>
+          <td><span class="received-cell"><span>${periodLabel(installment.receivedMonth)}</span><strong>${money(installment.receivedValue)}</strong></span></td>
+          <td>${periodLabel(installment.billingMonth)}</td>
+          <td class="money"><strong>${installment.confirmed ? money(variableFor(contract, installment)) : "—"}</strong></td>
+          <td class="status-cell"><span class="tag ${installment.paid ? "status-confirmed" : installment.confirmed ? "status-pending" : "status-pending"}">${installment.paid ? "Pago" : installment.confirmed ? "Confirmado" : "Pendente"}</span></td>
+          <td class="money"><button type="button" class="btn-secondary" data-edit-contract="${contract.id}" data-edit-installment="${installment.id}">Editar</button></td>
+        </tr>
+      `;
+    }
+
+    function renderManagementContracts() {
+        const contracts = filteredContracts();
+        document.getElementById("managementContractsContainer").innerHTML = contracts.length ? contracts.map((contract) => {
+          const installments = activeInstallments(contract);
+        const archived = contract.installments.filter((item) => item.archived).sort((a, b) => a.number - b.number);
+          const archivedCount = archived.length;
+          const confirmed = installments.filter((item) => item.confirmed);
+          const paid = installments.filter((item) => item.paid);
+          const pending = installments.filter((item) => !item.confirmed);
+        const paidVariable = paid.reduce((sum, item) => sum + variableFor(contract, item), 0);
+        const progress = installments.length ? (paid.length / installments.length) * 100 : 0;
+        const nextBilling = pending
+          .map((item) => item.billingMonth)
+          .sort()[0];
+        const expanded = managementUi.expandedId === contract.id;
+        const visible = contractVisibleInstallments(contract);
+
+        return `
+          <article class="management-contract">
+            <div class="management-contract-header">
+              <div class="management-contract-title">
+                <h4>${escapeHtml(contract.client)}</h4>
+                <span class="tag">${contract.type} · ${(rateFor(contract.type) * 100).toLocaleString("pt-BR")}%</span>
+                <span class="tag ${pending.length ? "status-pending" : "status-confirmed"}">${confirmed.length}/${installments.length} confirmadas</span>
+                <span class="tag ${paid.length ? "status-confirmed" : "status-pending"}">${paid.length}/${installments.length} pagas</span>
+              </div>
+              <div class="contract-expanded-actions">
+                <button class="btn-secondary" type="button" data-edit-contract-details="${contract.id}">Editar contrato</button>
+                <button class="btn-secondary danger-action" type="button" data-delete-contract="${contract.id}">Excluir</button>
+                <button class="contract-expand" type="button" data-toggle-contract="${contract.id}">${expanded ? "Fechar" : "Abrir"}</button>
+              </div>
+            </div>
+            <div class="management-contract-summary">
+              <div class="management-summary-item"><span>Competência</span><strong>${periodLabel(contract.saleCompetency)}</strong></div>
+              <div class="management-summary-item"><span>Contrato</span><strong>${money(contract.totalValue)}</strong></div>
+              <div class="management-summary-item"><span>Valor parcela</span><strong>${money(contractRegularInstallmentValue(contract.totalValue, installments.length))}</strong></div>
+              <div class="management-summary-item"><span>Variável total</span><strong>${money(contractVariableTotal(contract))}</strong></div>
+              <div class="management-summary-item"><span>Pagas</span><strong>${paid.length}</strong></div>
+              <div class="management-summary-item"><span>Variável paga</span><strong>${money(paidVariable)}</strong></div>
+              <div class="management-summary-item"><span>Próxima cobrança</span><strong>${nextBilling ? periodLabel(nextBilling) : "Concluído"}</strong></div>
+            </div>
+            ${archivedCount ? `
+              <details class="archived-details">
+                <summary>Histórico arquivado: ${archivedCount}</summary>
+                <div class="archived-list">
+                  ${archived.map((installment) => `
+                    <div class="archived-item">
+                      <strong>Parcela ${installment.number}</strong><br>
+                      Recebimento: ${periodLabel(installment.receivedMonth)} · ${money(installment.receivedValue)}<br>
+                      Cobrança: ${periodLabel(installment.billingMonth)}
+                    </div>
+                  `).join("")}
+                </div>
+              </details>
+            ` : ""}
+            <div class="contract-progress"><span style="width:${progress}%"></span></div>
+            ${expanded ? `
+              <div class="contract-expanded">
+                <div class="contract-expanded-toolbar">
+                  <span>${visible.total} parcela${visible.total === 1 ? "" : "s"} nesta visão</span>
+                  <div class="contract-expanded-actions">
+                    <button class="btn-secondary" type="button" data-toggle-confirmed="${contract.id}">
+                      ${managementUi.showConfirmedIds.has(contract.id) ? "Ocultar confirmadas" : "Mostrar confirmadas"}
+                    </button>
+                    ${visible.total > 3 ? `
+                      <button class="btn-secondary" type="button" data-toggle-schedule="${contract.id}">
+                        ${managementUi.fullScheduleIds.has(contract.id) ? "Mostrar somente próximas" : "Ver cronograma completo"}
+                      </button>
+                    ` : ""}
+                  </div>
+                </div>
+                <div class="table-scroll">
+                  <table class="management-table">
+                    <thead>
+                      <tr>
+                        <th>Parcela</th>
+                        <th>Competência</th>
+                        <th>Recebido</th>
+                        <th>Cobrança</th>
+                        <th class="money">Variável</th>
+                        <th>Status</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${visible.installments.length
+                        ? visible.installments.map((installment) => renderCompactRow(contract, installment)).join("")
+                        : `<tr><td colspan="7">Nenhuma parcela nesta visão.</td></tr>`}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ` : ""}
+          </article>
+        `;
+      }).join("") : `<div class="empty-state">Nenhum contrato corresponde aos filtros selecionados.</div>`;
+
+      document.querySelectorAll("[data-toggle-contract]").forEach((button) => {
+        button.addEventListener("click", () => {
+          managementUi.expandedId = managementUi.expandedId === button.dataset.toggleContract ? null : button.dataset.toggleContract;
+          renderManagementContracts();
+        });
+      });
+
+      document.querySelectorAll("[data-toggle-schedule]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.toggleSchedule;
+          managementUi.fullScheduleIds.has(id) ? managementUi.fullScheduleIds.delete(id) : managementUi.fullScheduleIds.add(id);
+          renderManagementContracts();
+        });
+      });
+
+      document.querySelectorAll("[data-toggle-confirmed]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.toggleConfirmed;
+          managementUi.showConfirmedIds.has(id) ? managementUi.showConfirmedIds.delete(id) : managementUi.showConfirmedIds.add(id);
+          renderManagementContracts();
+        });
+      });
+
+      document.querySelectorAll("[data-edit-contract-details]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          openContractDrawer(button.dataset.editContractDetails);
+        });
+      });
+
+      document.querySelectorAll("[data-delete-contract]").forEach((button) => {
+        button.addEventListener("click", async (event) => {
+          event.stopPropagation();
+          await deleteContract(button.dataset.deleteContract);
+        });
+      });
+
+      document.querySelectorAll("[data-edit-contract][data-edit-installment]").forEach((element) => {
+        element.addEventListener("click", (event) => {
+          event.stopPropagation();
+          openInstallmentDrawer(element.dataset.editContract, element.dataset.editInstallment);
+        });
+      });
+    }
+
+    function selectedDrawerRecord() {
+      const contract = state.contracts.find((item) => item.id === managementUi.selectedContractId);
+      const installment = contract?.installments.find((item) => item.id === managementUi.selectedInstallmentId && !item.archived);
+      return contract && installment ? { contract, installment } : null;
+    }
+
+    function openInstallmentDrawer(contractId, installmentId) {
+      closeContractDrawer();
+      managementUi.selectedContractId = contractId;
+      managementUi.selectedInstallmentId = installmentId;
+      renderInstallmentDrawer();
+      document.getElementById("drawerOverlay").hidden = false;
+      document.getElementById("installmentDrawer").hidden = false;
+    }
+
+    function closeInstallmentDrawer() {
+      managementUi.selectedContractId = null;
+      managementUi.selectedInstallmentId = null;
+      document.getElementById("drawerOverlay").hidden = true;
+      document.getElementById("installmentDrawer").hidden = true;
+    }
+
+    function selectedContractEditRecord() {
+      return state.contracts.find((item) => item.id === managementUi.selectedContractEditId) || null;
+    }
+
+    function openContractDrawer(contractId) {
+      closeInstallmentDrawer();
+      managementUi.selectedContractEditId = contractId;
+      renderContractDrawer();
+      document.getElementById("drawerOverlay").hidden = false;
+      document.getElementById("contractDrawer").hidden = false;
+    }
+
+    function closeContractDrawer() {
+      managementUi.selectedContractEditId = null;
+      document.getElementById("drawerOverlay").hidden = true;
+      document.getElementById("contractDrawer").hidden = true;
+    }
+
+    function closeDrawers() {
+      closeInstallmentDrawer();
+      closeContractDrawer();
+    }
+
+    function renderContractDrawer() {
+      const contract = selectedContractEditRecord();
+      if (!contract) return;
+      const installments = activeInstallments(contract);
+      const confirmed = installments.filter((item) => item.confirmed);
+      const archivedCount = archivedInstallmentCount(contract);
+      document.getElementById("contractDrawerTitle").textContent = `${contract.client} · contrato`;
+      document.getElementById("contractDrawerContext").innerHTML = `
+        <div><span>Competência</span><strong>${periodLabel(contract.saleCompetency)}</strong></div>
+        <div><span>Tipo</span><strong>${contract.type} · ${(rateFor(contract.type) * 100).toLocaleString("pt-BR")}%</strong></div>
+        <div><span>Variável total</span><strong>${money(contractVariableTotal(contract))}</strong></div>
+        <div><span>Parcelas</span><strong>${confirmed.length}/${installments.length} confirmadas</strong></div>
+        ${archivedCount ? `<div><span>Histórico arquivado</span><strong>${archivedCount} parcela${archivedCount === 1 ? "" : "s"}</strong></div>` : ""}
+      `;
+      document.getElementById("contractEditTotal").value = contract.totalValue;
+      document.getElementById("contractEditInstallmentCount").value = installments.length;
+      document.getElementById("contractEditInstallmentValue").value = contractRegularInstallmentValue(contract.totalValue, installments.length);
+    }
+
+    function renderInstallmentDrawer() {
+      const record = selectedDrawerRecord();
+      if (!record) return;
+      const { contract, installment } = record;
+      const installmentTotal = activeInstallmentCount(contract);
+      document.getElementById("drawerTitle").textContent = `${contract.client} · parcela ${installment.number}/${installmentTotal}`;
+      document.getElementById("drawerContext").innerHTML = `
+        <div><span>Competência</span><strong>${periodLabel(contract.saleCompetency)}</strong></div>
+        <div><span>Tipo</span><strong>${contract.type} · ${(rateFor(contract.type) * 100).toLocaleString("pt-BR")}%</strong></div>
+        <div><span>Parcela</span><strong>${installment.number}/${installmentTotal}</strong></div>
+        <div><span>Valor da parcela</span><strong id="drawerPlannedValue">${money(installment.plannedValue)}</strong></div>
+        <div><span>Status</span><strong>${installment.confirmed ? "Confirmado · edição permitida" : "Pendente"}</strong></div>
+      `;
+      const receivedMonth = document.getElementById("drawerReceivedMonth");
+      const receivedValue = document.getElementById("drawerReceivedValue");
+      const billingMonth = document.getElementById("drawerBillingMonth");
+      const paid = document.getElementById("drawerPaid");
+      receivedMonth.innerHTML = monthOptions(installment.receivedMonth);
+      billingMonth.innerHTML = monthOptions(installment.billingMonth);
+      receivedMonth.value = installment.receivedMonth;
+      receivedValue.value = installment.receivedValue;
+      billingMonth.value = installment.billingMonth;
+      paid.checked = Boolean(installment.paid);
+      receivedMonth.disabled = false;
+      receivedValue.disabled = false;
+      billingMonth.disabled = false;
+      paid.disabled = false;
+      document.querySelector('#installmentForm button[type="submit"]').disabled = false;
+      const confirmationButton = document.getElementById("drawerConfirmationButton");
+      confirmationButton.textContent = installment.confirmed ? "Reabrir parcela" : "Confirmar parcela";
+      confirmationButton.className = installment.confirmed ? "btn-reopen" : "btn-confirm";
+    }
+
+    function invoiceMarkup() {
+      const selected = selectedBillingRecords();
+      if (!selected.length) {
+        return `<div class="empty-state">Nenhum recebimento confirmado para cobrança em ${periodLabel(state.billingFilter)}.</div>`;
+      }
+      const total = selected.reduce((sum, item) => sum + variableFor(item.contract, item.installment), 0);
+      return `
+        <div class="invoice-preview">
+          ${selected.map(({ contract, installment }) => `
+            <div class="invoice-row">
+              <div><span>Contrato</span><strong>${contract.client}</strong></div>
+              <div><span>Competência</span><strong>${periodLabel(contract.saleCompetency)}</strong></div>
+              <div><span>Recebimento</span><strong>${periodLabel(installment.receivedMonth)}</strong></div>
+              <div><span>Base / taxa</span><strong>${money(installment.receivedValue)} · ${(rateFor(contract.type) * 100).toLocaleString("pt-BR")}%</strong></div>
+              <div><span>Variável</span><strong>${money(variableFor(contract, installment))}</strong></div>
+            </div>
+          `).join("")}
+        </div>
+        <div class="invoice-total">
+          <span>Total variável de ${periodLabel(state.billingFilter)}</span>
+          <strong>${money(total)}</strong>
+        </div>
+      `;
+    }
+
+    function renderManagementInvoice() {
+      document.getElementById("managementInvoicePreview").innerHTML = invoiceMarkup();
+    }
+
+    function renderAll() {
+      billingFilter.value = state.billingFilter;
+      renderDashboard();
+      renderManagementMetrics();
+      renderManagementContracts();
+      renderManagementInvoice();
+      if (selectedDrawerRecord()) renderInstallmentDrawer();
+      if (selectedContractEditRecord()) renderContractDrawer();
+    }
+
+    function syncContractInstallmentValue() {
+      const total = Number(document.getElementById("contractEditTotal").value);
+      const count = Number(document.getElementById("contractEditInstallmentCount").value);
+      document.getElementById("contractEditInstallmentValue").value = contractRegularInstallmentValue(total, count);
+    }
+
+    function syncContractTotalFromInstallmentValue() {
+      const installmentValue = Number(document.getElementById("contractEditInstallmentValue").value);
+      const count = Math.max(1, Math.min(60, Math.floor(Number(document.getElementById("contractEditInstallmentCount").value) || 1)));
+      document.getElementById("contractEditTotal").value = roundedMoneyValue(installmentValue * count);
+    }
+
+    document.getElementById("roleLoginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      let role = "";
+      if (supabaseEnabled) {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (!error) role = await loadProfileRole();
+      } else {
+        role = password === ACCESS_PASSWORDS.admin
+          ? "admin"
+          : password === ACCESS_PASSWORDS.client
+            ? "client"
+            : "";
+      }
+      if (!role) {
+        document.getElementById("loginError").hidden = false;
+        return;
+      }
+      document.getElementById("loginError").hidden = true;
+      sessionStorage.setItem(LOGIN_KEY, role);
+      state = supabaseEnabled ? await loadRemoteState() : loadLocalState();
+      applyAccess(role);
+      renderAll();
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", showLogin);
+
+    billingFilter.innerHTML = monthOptions(state.billingFilter);
+    contractBillingFilter.innerHTML = `<option value="all">Todos</option>${monthOptions("")}`;
+    billingFilter.addEventListener("change", async () => {
+      state.billingFilter = billingFilter.value;
+      await saveState();
+      renderAll();
+    });
+
+    contractSearch.addEventListener("input", () => {
+      managementUi.search = contractSearch.value;
+      renderManagementContracts();
+    });
+
+    contractStatusFilter.addEventListener("change", () => {
+      managementUi.status = contractStatusFilter.value;
+      managementUi.expandedId = null;
+      renderManagementContracts();
+    });
+
+    contractTypeFilter.addEventListener("change", () => {
+      managementUi.type = contractTypeFilter.value;
+      managementUi.expandedId = null;
+      renderManagementContracts();
+    });
+
+    contractBillingFilter.addEventListener("change", () => {
+      managementUi.billing = contractBillingFilter.value;
+      managementUi.expandedId = null;
+      renderManagementContracts();
+    });
+
+    yearFilter.addEventListener("change", () => {
+      updateDashboardFilters();
+      renderDashboard();
+    });
+    monthFilter.addEventListener("change", renderDashboard);
+    document.getElementById("validateAllClientChargesButton").addEventListener("click", validateAllClientChargesForSelection);
+    document.getElementById("chargeRows").addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-client-confirm-charge]");
+      if (!button) return;
+      event.preventDefault();
+      const contract = state.contracts.find((item) => item.id === button.dataset.clientContract);
+      const installment = contract?.installments.find((item) => item.id === button.dataset.clientInstallment && !item.archived);
+      if (!contract || !installment) return;
+      state.clientConfirmations = state.clientConfirmations || {};
+      if (clientConfirmationForCharge(contract, installment)) {
+        delete state.clientConfirmations[button.dataset.clientConfirmCharge];
+        await saveState();
+        renderDashboard();
+        return;
+      }
+      state.clientConfirmations[button.dataset.clientConfirmCharge] = {
+        confirmed: true,
+        confirmedAt: new Date().toISOString(),
+        amount: roundedMoneyValue(variableFor(contract, installment)),
+        contractId: contract.id,
+        installmentId: installment.id,
+        billingMonth: installment.billingMonth
+      };
+      await saveState();
+      renderDashboard();
+    });
+
+    document.getElementById("resetManagementButton")?.addEventListener("click", async () => {
+      state = cloneDefaults();
+      managementUi.expandedId = null;
+      managementUi.fullScheduleIds.clear();
+      managementUi.showConfirmedIds.clear();
+      managementUi.search = "";
+      managementUi.status = "all";
+      managementUi.type = "all";
+      managementUi.billing = "all";
+      contractSearch.value = "";
+      contractStatusFilter.value = "all";
+      contractTypeFilter.value = "all";
+      contractBillingFilter.value = "all";
+      closeDrawers();
+      await saveState();
+      billingFilter.innerHTML = monthOptions(state.billingFilter);
+      updateDashboardFilters();
+      renderAll();
+    });
+
+    document.getElementById("prepareInvoiceButton")?.addEventListener("click", () => {
+      renderManagementInvoice();
+      document.getElementById("managementInvoicePreview").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("closeDrawerButton").addEventListener("click", closeInstallmentDrawer);
+    document.getElementById("drawerCancelButton").addEventListener("click", closeInstallmentDrawer);
+    document.getElementById("closeContractDrawerButton").addEventListener("click", closeContractDrawer);
+    document.getElementById("contractEditCancelButton").addEventListener("click", closeContractDrawer);
+    document.getElementById("drawerOverlay").addEventListener("click", closeDrawers);
+    document.getElementById("contractEditTotal").addEventListener("input", syncContractInstallmentValue);
+    document.getElementById("contractEditInstallmentCount").addEventListener("input", syncContractInstallmentValue);
+    document.getElementById("contractEditInstallmentCount").addEventListener("change", syncContractInstallmentValue);
+    document.getElementById("contractEditInstallmentValue").addEventListener("input", syncContractTotalFromInstallmentValue);
+
+    document.getElementById("contractEditForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const contract = selectedContractEditRecord();
+      if (!contract) return;
+      applyContractStructure(
+        contract,
+        Number(document.getElementById("contractEditTotal").value),
+        Number(document.getElementById("contractEditInstallmentCount").value)
+      );
+      await saveState();
+      updateDashboardFilters();
+      renderAll();
+    });
+
+    document.getElementById("installmentForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const record = selectedDrawerRecord();
+      if (!record) return;
+      record.installment.receivedMonth = document.getElementById("drawerReceivedMonth").value;
+      record.installment.receivedValue = Math.max(Number(document.getElementById("drawerReceivedValue").value) || 0, 0);
+      record.installment.billingMonth = document.getElementById("drawerBillingMonth").value;
+      record.installment.paid = document.getElementById("drawerPaid").checked;
+      await saveState();
+      updateDashboardFilters();
+      renderAll();
+    });
+
+    document.getElementById("drawerConfirmationButton").addEventListener("click", async () => {
+      const record = selectedDrawerRecord();
+      if (!record) return;
+      if (!record.installment.confirmed) {
+        record.installment.receivedMonth = document.getElementById("drawerReceivedMonth").value;
+        record.installment.receivedValue = Math.max(Number(document.getElementById("drawerReceivedValue").value) || 0, 0);
+        record.installment.billingMonth = document.getElementById("drawerBillingMonth").value;
+      }
+      const nextConfirmed = !record.installment.confirmed;
+      record.installment.confirmed = nextConfirmed;
+      record.installment.paid = nextConfirmed ? document.getElementById("drawerPaid").checked : false;
+      await saveState();
+      updateDashboardFilters();
+      renderAll();
+    });
+
+    const newContractDialog = document.getElementById("newContractDialog");
+    const newContractForm = document.getElementById("newContractForm");
+    const newCompetency = document.getElementById("newCompetency");
+    const newFirstReceipt = document.getElementById("newFirstReceipt");
+    const newFirstBilling = document.getElementById("newFirstBilling");
+
+    newCompetency.innerHTML = monthOptions("2026-05");
+    newFirstReceipt.innerHTML = monthOptions("2026-06");
+    newFirstBilling.innerHTML = monthOptions("2026-07");
+
+    document.getElementById("newContractButton").addEventListener("click", () => {
+      newContractForm.reset();
+      newCompetency.value = "2026-05";
+      newFirstReceipt.value = "2026-06";
+      newFirstBilling.value = "2026-07";
+      newContractDialog.showModal();
+    });
+
+    document.getElementById("closeContractDialogButton").addEventListener("click", () => newContractDialog.close());
+    document.getElementById("cancelContractButton").addEventListener("click", () => newContractDialog.close());
+
+    newFirstReceipt.addEventListener("change", () => {
+      newFirstBilling.value = shiftPeriod(newFirstReceipt.value, 1);
+    });
+
+    newContractForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(newContractForm);
+      const client = String(formData.get("client") || "").trim();
+      const type = String(formData.get("type") || "Aluguel");
+      const saleCompetency = String(formData.get("saleCompetency") || "");
+      const totalValue = Number(formData.get("totalValue"));
+      const installmentCount = Number(formData.get("installmentCount"));
+      const firstReceiptMonth = String(formData.get("firstReceiptMonth") || "");
+      const firstBillingMonth = String(formData.get("firstBillingMonth") || "");
+
+      if (!client || totalValue <= 0 || installmentCount < 1 || installmentCount > 60) return;
+
+      const id = uniqueContractId(client);
+      state.contracts.push({
+        id,
+        client,
+        type,
+        saleCompetency,
+        totalValue,
+        installments: createInstallments(id, totalValue, installmentCount, firstReceiptMonth, firstBillingMonth)
+      });
+      await saveState();
+      updateDashboardFilters();
+      renderAll();
+      newContractDialog.close();
+    });
+
+    async function initializeApp() {
+      try {
+        currentRole = await loadProfileRole();
+        state = supabaseEnabled ? await loadRemoteState() : loadLocalState();
+        if (supabaseEnabled && currentRole === "admin" && remoteDatabaseWasEmpty) {
+          await saveState();
+        }
+        billingFilter.innerHTML = monthOptions(state.billingFilter);
+        contractBillingFilter.innerHTML = `<option value="all">Todos</option>${monthOptions("")}`;
+        updateDashboardFilters();
+        renderAll();
+        if (currentRole === "client" || currentRole === "admin") {
+          applyAccess(currentRole);
+        } else {
+          showLogin();
+        }
+      } catch (error) {
+        console.error("Erro ao iniciar o dashboard", error);
+        state = loadLocalState();
+        updateDashboardFilters();
+        renderAll();
+        showLogin();
+        document.getElementById("loginError").textContent = "Não foi possível conectar ao Supabase. Confira URL, chave e políticas.";
+        document.getElementById("loginError").hidden = false;
+      }
+    }
+
+    initializeApp();
+  </script>
+</body>
+</html>
+
+
